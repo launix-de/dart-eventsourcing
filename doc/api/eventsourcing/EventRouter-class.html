@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="API docs for the EventRouter class from the eventsourcing library, for the Dart programming language.">
+  <title>EventRouter class - eventsourcing library - Dart API</title>
+  <!-- required because all the links are pseudo-absolute -->
+  <base href="..">
+
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' type='text/css'>
+  <link rel="stylesheet" href="static-assets/prettify.css">
+  <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+
+  <!-- Do not remove placeholder -->
+  <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+  <nav class="navbar navbar-fixed-top">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 contents">
+          <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+          <ol class="breadcrumbs gt-separated hidden-xs">
+            <li><a href="index.html">eventsourcing</a></li>
+            <li><a href="eventsourcing/eventsourcing-library.html">eventsourcing</a></li>
+            <li class="self-crumb">EventRouter</li>
+          </ol>
+          <div class="self-name">EventRouter</div>
+          <form class="search navbar-right" role="search">
+            <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+          </form>
+        </div> <!-- /col -->
+      </div> <!-- /row -->
+    </div> <!-- /container -->
+  </nav>
+
+  <div class="container masthead">
+    <div class="row">
+      <div class="col-sm-12 contents">
+        <ol class="breadcrumbs gt-separated visible-xs">
+          <li><a href="index.html">eventsourcing</a></li>
+          <li><a href="eventsourcing/eventsourcing-library.html">eventsourcing</a></li>
+          <li class="self-crumb">EventRouter</li>
+        </ol>
+        <div class="title-description">
+          <h1 class="title">
+            <span class="kind">class</span> EventRouter
+          </h1>
+        </div>
+        <ul class="subnav">
+          <li><a href="eventsourcing/EventRouter-class.html#static-methods">Static Methods</a></li>
+          <li><a href="eventsourcing/EventRouter-class.html#instance-properties">Properties</a></li>
+          <li><a href="eventsourcing/EventRouter-class.html#operators">Operators</a></li>
+          <li><a href="eventsourcing/EventRouter-class.html#instance-methods">Methods</a></li>
+        </ul>
+      </div> <!-- /col -->
+    </div> <!-- /row -->
+  </div> <!-- /container -->
+
+</header>
+
+<div class="container body">
+  <div class="row">
+
+  <div class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">eventsourcing</a></h5>
+    <h5><a href="eventsourcing/eventsourcing-library.html">eventsourcing</a></h5>
+
+    <ol>
+    
+      <li class="section-title"><a href="eventsourcing/eventsourcing-library.html#typedefs">Typedefs</a></li>
+      <li><a href="eventsourcing/Authenticator.html">Authenticator</a></li>
+      <li><a href="eventsourcing/BaseHandler.html">BaseHandler</a></li>
+      <li><a href="eventsourcing/EventHandler.html">EventHandler</a></li>
+      <li><a href="eventsourcing/EventProvider.html">EventProvider</a></li>
+      <li><a href="eventsourcing/QueryHandler.html">QueryHandler</a></li>
+      <li><a href="eventsourcing/QueryProvider.html">QueryProvider</a></li>
+      <li><a href="eventsourcing/ResultHandler.html">ResultHandler</a></li>
+      <li><a href="eventsourcing/Validator.html">Validator</a></li>
+    
+    
+      <li class="section-title"><a href="eventsourcing/eventsourcing-library.html#functions">Functions</a></li>
+      <li><a href="eventsourcing/acceptWs.html">acceptWs</a></li>
+      <li><a href="eventsourcing/aggregate.html">aggregate</a></li>
+      <li><a href="eventsourcing/combineEventProviders.html">combineEventProviders</a></li>
+      <li><a href="eventsourcing/combineQueryProviders.html">combineQueryProviders</a></li>
+      <li><a href="eventsourcing/combineValidatorsOr.html">combineValidatorsOr</a></li>
+      <li><a href="eventsourcing/deprecatedHandler.html">deprecatedHandler</a></li>
+      <li><a href="eventsourcing/emptyHandler.html">emptyHandler</a></li>
+      <li><a href="eventsourcing/filterQuery.html">filterQuery</a></li>
+      <li><a href="eventsourcing/prepareSQL.html">prepareSQL</a></li>
+      <li><a href="eventsourcing/prepareSQLDetail.html">prepareSQLDetail</a></li>
+      <li><a href="eventsourcing/prepareSQLDetailRenamed.html">prepareSQLDetailRenamed</a></li>
+      <li><a href="eventsourcing/prepareSQLList.html">prepareSQLList</a></li>
+      <li><a href="eventsourcing/prepareSQLListRenamed.html">prepareSQLListRenamed</a></li>
+      <li><a href="eventsourcing/prepareSQLSub.html">prepareSQLSub</a></li>
+      <li><a href="eventsourcing/readEventFile.html">readEventFile</a></li>
+      <li><a href="eventsourcing/resetDatabase.html">resetDatabase</a></li>
+      <li><a href="eventsourcing/resultsToMap.html">resultsToMap</a></li>
+      <li><a href="eventsourcing/validatorSQLReturnsAtLeastOneLine.html">validatorSQLReturnsAtLeastOneLine</a></li>
+      <li><a href="eventsourcing/validatorSQLReturnsEmptyResult.html">validatorSQLReturnsEmptyResult</a></li>
+    
+      <li class="section-title"><a href="eventsourcing/eventsourcing-library.html#enums">Enums</a></li>
+      <li><a href="eventsourcing/QueryFilterMode-class.html">QueryFilterMode</a></li>
+      <li><a href="eventsourcing/WebSocketState-class.html">WebSocketState</a></li>
+    
+      <li class="section-title"><a href="eventsourcing/eventsourcing-library.html#classes">Classes</a></li>
+      <li><a href="eventsourcing/EventFileWriter-class.html">EventFileWriter</a></li>
+      <li><a href="eventsourcing/EventRouter-class.html">EventRouter</a></li>
+      <li><a href="eventsourcing/QueryFilter-class.html">QueryFilter</a></li>
+      <li><a href="eventsourcing/Subscription-class.html">Subscription</a></li>
+      <li><a href="eventsourcing/WebSocketConnection-class.html">WebSocketConnection</a></li>
+    
+    </ol>
+  </div>
+
+  <div class="col-xs-12 col-sm-9 col-md-8 main-content">
+
+    <section class="desc markdown">
+      <p>Hauptklasse, die für eine Instanz des EventSourcing-Systems steht.
+ Integriert Datenbankzugriff (MySQL mit sqljocky), Eventsourcing in der Datei <code>eventsFile</code>
+ und einen Webserver mit speziellem WebSocket-Protokoll (siehe <code>WebSocketClient</code>)
+ sowie Auslieferung von statischen Dateien in "html".
+ Bei Start wird die aktuelle EventQueue in <a href="eventsourcing/EventRouter/eventFile.html">eventFile</a> in eine neue Datei in
+ <a href="eventsourcing/EventRouter/backupDirectory.html">backupDirectory</a> gesichert.</p>
+    </section>
+    
+
+
+
+    <section class="summary offset-anchor" id="static-methods">
+      <h2>Static Methods</h2>
+      <dl class="callables">
+        <dt id="create" class="callable">
+          <span class="name"><a href="eventsourcing/EventRouter/create.html">create</a></span><span class="signature">(<wbr><span class="parameter" id="create-param-eventHandler"><span class="parameter-name">eventHandler</span></span>, <span class="parameter" id="create-param-queryHandler"><span class="parameter-name">queryHandler</span></span>, {<span class="parameter" id="create-param-eventFilePath"><span class="type-annotation">String</span> <span class="parameter-name">eventFilePath</span>: <span class="default-value">'data/events.dat'</span></span>, <span class="parameter" id="create-param-backupPath"><span class="type-annotation">String</span> <span class="parameter-name">backupPath</span>: <span class="default-value">'data/backup'</span></span>, <span class="parameter" id="create-param-databaseSchemaPath"><span class="type-annotation">String</span> <span class="parameter-name">databaseSchemaPath</span>: <span class="default-value">'lib/schema.sql'</span></span>, <span class="parameter" id="create-param-authenticator"><span class="type-annotation"><a href="eventsourcing/Authenticator.html">Authenticator</a></span> <span class="parameter-name">authenticator</span>(<span class="parameter" id="Authenticator-param-username"><span class="type-annotation">String</span> <span class="parameter-name">username</span></span>, <span class="parameter" id="Authenticator-param-password"><span class="type-annotation">String</span> <span class="parameter-name">password</span></span>, <span class="parameter" id="Authenticator-param-remote"><span class="type-annotation">String</span> <span class="parameter-name">remote</span></span>, <span class="parameter" id="Authenticator-param-db"><span class="type-annotation">QueriableConnection</span> <span class="parameter-name">db</span></span>)</span>})
+            <span class="returntype parameter">&#8594; Future&lt;<a href="eventsourcing/EventRouter-class.html">EventRouter</a>&gt;</span>
+          </span>
+        </dt>
+        <dd>
+          <p>Erstellt einen neuen <a href="eventsourcing/EventRouter-class.html">EventRouter</a> mit den angegeben <a href="eventsourcing/EventHandler.html">EventHandler</a>n und
+<a href="eventsourcing/QueryHandler.html">QueryHandler</a>n.</p>
+        </dd>
+      </dl>
+    </section>
+
+
+    <section class="summary offset-anchor" id="instance-properties">
+      <h2>Properties</h2>
+
+      <dl class="properties">
+        <dt id="authenticator" class="property">
+          <span class="name"><a href="eventsourcing/EventRouter/authenticator.html">authenticator</a></span>
+          <span class="signature">&#8594; <a href="eventsourcing/Authenticator.html">Authenticator</a></span>
+        </dt>
+        <dd>
+          <p></p>
+          <div class="features">
+    read-only
+  </div>
+</dd>
+        <dt id="backupDirectory" class="property">
+          <span class="name"><a href="eventsourcing/EventRouter/backupDirectory.html">backupDirectory</a></span>
+          <span class="signature">&#8594; Directory</span>
+        </dt>
+        <dd>
+          <p>Ordner, in den die alte EventQueue bei Start gesichert wird</p>
+          <div class="features">
+    read-only
+  </div>
+</dd>
+        <dt id="connections" class="property">
+          <span class="name"><a href="eventsourcing/EventRouter/connections.html">connections</a></span>
+          <span class="signature">&#8594; List&lt;<a href="eventsourcing/WebSocketConnection-class.html">WebSocketConnection</a>&gt;</span>
+        </dt>
+        <dd>
+          <p></p>
+          <div class="features">
+    read-only
+  </div>
+</dd>
+        <dt id="db" class="property">
+          <span class="name"><a href="eventsourcing/EventRouter/db.html">db</a></span>
+          <span class="signature">&#8594; ConnectionPool</span>
+        </dt>
+        <dd>
+          <p>Pool an SQL-Verbindungen (Standardmaximum 50)</p>
+          <div class="features">
+    read-only
+  </div>
+</dd>
+        <dt id="eventFile" class="property">
+          <span class="name"><a href="eventsourcing/EventRouter/eventFile.html">eventFile</a></span>
+          <span class="signature">&#8594; File</span>
+        </dt>
+        <dd>
+          <p>EventQueue, in der die verarbeiteten Events gespeichert werden</p>
+          <div class="features">
+    read-only
+  </div>
+</dd>
+        <dt id="eventHandler" class="property">
+          <span class="name"><a href="eventsourcing/EventRouter/eventHandler.html">eventHandler</a></span>
+          <span class="signature">&#8594; Map&lt;String, List&lt;<a href="eventsourcing/EventHandler.html">EventHandler</a>&gt;&gt;</span>
+        </dt>
+        <dd>
+          <p>Bekannte <a href="eventsourcing/EventHandler.html">EventHandler</a>, die bei Ausführung eines bestimmten Events ausgeführt werden sollen</p>
+          <div class="features">
+    read-only
+  </div>
+</dd>
+        <dt id="hashCode" class="property inherited">
+          <span class="name"><a href="eventsourcing/EventRouter/hashCode.html">hashCode</a></span>
+          <span class="signature">&#8594; int</span>
+        </dt>
+        <dd class="inherited">
+          <p>Get a hash code for this object.<a href="eventsourcing/EventRouter/hashCode.html">&hellip;</a>
+</p>
+          <div class="features">
+    read-only, inherited
+  </div>
+</dd>
+        <dt id="pushHooks" class="property">
+          <span class="name"><a href="eventsourcing/EventRouter/pushHooks.html">pushHooks</a></span>
+          <span class="signature">&#8594; List&lt;<a href="eventsourcing/EventHandler.html">EventHandler</a>&gt;</span>
+        </dt>
+        <dd>
+          <p>Werden zusätzlich ausgeführt, wenn <em>neue</em> Events eingehen</p>
+          <div class="features">
+    read-only
+  </div>
+</dd>
+        <dt id="queryHandler" class="property">
+          <span class="name"><a href="eventsourcing/EventRouter/queryHandler.html">queryHandler</a></span>
+          <span class="signature">&#8594; Map&lt;String, List&lt;<a href="eventsourcing/QueryHandler.html">QueryHandler</a>&gt;&gt;</span>
+        </dt>
+        <dd>
+          <p>Bekannte <a href="eventsourcing/QueryHandler.html">QueryHandler</a>, die bei Ausführung eines bestimmten Queries ausgeführt werden sollen</p>
+          <div class="features">
+    read-only
+  </div>
+</dd>
+        <dt id="runtimeType" class="property inherited">
+          <span class="name"><a href="eventsourcing/EventRouter/runtimeType.html">runtimeType</a></span>
+          <span class="signature">&#8594; Type</span>
+        </dt>
+        <dd class="inherited">
+          <p>A representation of the runtime type of the object.</p>
+          <div class="features">
+    read-only, inherited
+  </div>
+</dd>
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor inherited" id="operators">
+      <h2>Operators</h2>
+      <dl class="callables">
+        <dt id="operator ==" class="callable inherited">
+          <span class="name"><a href="eventsourcing/EventRouter/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="parameter-name">other</span></span>)
+            <span class="returntype parameter">&#8594; bool</span>
+          </span>
+        </dt>
+        <dd class="inherited">
+          <p>The equality operator.<a href="eventsourcing/EventRouter/operator_equals.html">&hellip;</a>
+</p>
+          <div class="features">inherited</div>
+        </dd>
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="instance-methods">
+      <h2>Methods</h2>
+      <dl class="callables">
+        <dt id="backupEvents" class="callable">
+          <span class="name"><a href="eventsourcing/EventRouter/backupEvents.html">backupEvents</a></span><span class="signature">(<wbr>)
+            <span class="returntype parameter">&#8594; Future</span>
+          </span>
+        </dt>
+        <dd>
+          <p>Sichert die aktuelle EventQueue in <a href="eventsourcing/EventRouter/eventFile.html">eventFile</a> in eine neue Datei in <a href="" events_millisecondssinceepoch.dat""="">backupDirectory</a></p>
+        </dd>
+        <dt id="noSuchMethod" class="callable inherited">
+          <span class="name"><a href="eventsourcing/EventRouter/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation">Invocation</span> <span class="parameter-name">invocation</span></span>)
+            <span class="returntype parameter">&#8594; dynamic</span>
+          </span>
+        </dt>
+        <dd class="inherited">
+          <p>Invoked when a non-existent method or property is accessed.<a href="eventsourcing/EventRouter/noSuchMethod.html">&hellip;</a>
+</p>
+          <div class="features">inherited</div>
+        </dd>
+        <dt id="replayEvent" class="callable">
+          <span class="name"><a href="eventsourcing/EventRouter/replayEvent.html">replayEvent</a></span><span class="signature">(<wbr><span class="parameter" id="replayEvent-param-e"><span class="type-annotation">Map</span> <span class="parameter-name">e</span></span>)
+            <span class="returntype parameter">&#8594; Future</span>
+          </span>
+        </dt>
+        <dd>
+          <p>Spielt ein Event neu ab. Dabei werden Ausführungsfehler in einzelnen <a href="eventsourcing/EventHandler.html">EventHandler</a>n ignoriert
+und das Ergebnis der anderen Handler trotzdem verwendet und in die Datenbank gesichert.
+Die EventHandler werden alle <em>nacheinander</em> in <em>einer</em> Transaktion ausgeführt.
+Unbekannte Events lösen eine Exception aus. Jedes Event sollte die Felder "action", "id" und "timestamp"
+definieren.</p>
+        </dd>
+        <dt id="submitEvent" class="callable">
+          <span class="name"><a href="eventsourcing/EventRouter/submitEvent.html">submitEvent</a></span><span class="signature">(<wbr><span class="parameter" id="submitEvent-param-e"><span class="type-annotation">Map</span> <span class="parameter-name">e</span></span>, <span class="parameter" id="submitEvent-param-hookData"><span class="type-annotation">Map</span> <span class="parameter-name">hookData</span></span>, <span class="parameter" id="submitEvent-param-user"><span class="type-annotation">int</span> <span class="parameter-name">user</span></span>)
+            <span class="returntype parameter">&#8594; Future&lt;Map&gt;</span>
+          </span>
+        </dt>
+        <dd>
+          <p>Spielt ein Event neu ab. Die EventHandler werden alle <em>nacheinander</em> in <em>einer</em> Transaktion ausgeführt.
+Wirft einer der <a href="eventsourcing/EventHandler.html">EventHandler</a> eine Exception, wird ein Rollback ausgeführt und eine Map mit {"error": "msg"}
+zurückgegeben.
+Unbekannte Events lösen eine Exception aus. Jedes Event sollte die Felder "action", "id" und "timestamp"
+definieren.
+TODO: Die Events dürfen ja eigentlich auch parallel ausgeführt werden, da sie voneinander unabhängig sind</p>
+        </dd>
+        <dt id="submitQuery" class="callable">
+          <span class="name"><a href="eventsourcing/EventRouter/submitQuery.html">submitQuery</a></span><span class="signature">(<wbr><span class="parameter" id="submitQuery-param-q"><span class="type-annotation">Map</span> <span class="parameter-name">q</span></span>, <span class="parameter" id="submitQuery-param-user"><span class="type-annotation">int</span> <span class="parameter-name">user</span></span>)
+            <span class="returntype parameter">&#8594; Future&lt;Map&gt;</span>
+          </span>
+        </dt>
+        <dd>
+          <p>Führt eine Query aus. Löst ein <a href="eventsourcing/QueryHandler.html">QueryHandler</a> eine Exception aus, wird eine Map mit {"error": "msg"}
+zurückgegeben.
+Aktuell werden die QueryHandler in einer konsistenten Transaction <em>parallel</em> ausgeführt.</p>
+        </dd>
+        <dt id="toString" class="callable inherited">
+          <span class="name"><a href="eventsourcing/EventRouter/toString.html">toString</a></span><span class="signature">(<wbr>)
+            <span class="returntype parameter">&#8594; String</span>
+          </span>
+        </dt>
+        <dd class="inherited">
+          <p>Returns a string representation of this object.</p>
+          <div class="features">inherited</div>
+        </dd>
+      </dl>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+  <div class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+    <h5>EventRouter</h5>
+    <ol>
+    
+    
+      <li class="section-title"><a href="eventsourcing/EventRouter-class.html#static-methods">Static methods</a></li>
+      <li><a href="eventsourcing/EventRouter/create.html">create</a></li>
+    
+    
+      <li class="section-title">
+        <a href="eventsourcing/EventRouter-class.html#instance-properties">Properties</a>
+      </li>
+      <li><a href="eventsourcing/EventRouter/authenticator.html">authenticator</a></li>
+      <li><a href="eventsourcing/EventRouter/backupDirectory.html">backupDirectory</a></li>
+      <li><a href="eventsourcing/EventRouter/connections.html">connections</a></li>
+      <li><a href="eventsourcing/EventRouter/db.html">db</a></li>
+      <li><a href="eventsourcing/EventRouter/eventFile.html">eventFile</a></li>
+      <li><a href="eventsourcing/EventRouter/eventHandler.html">eventHandler</a></li>
+      <li class="inherited"><a href="eventsourcing/EventRouter/hashCode.html">hashCode</a></li>
+      <li><a href="eventsourcing/EventRouter/pushHooks.html">pushHooks</a></li>
+      <li><a href="eventsourcing/EventRouter/queryHandler.html">queryHandler</a></li>
+      <li class="inherited"><a href="eventsourcing/EventRouter/runtimeType.html">runtimeType</a></li>
+    
+      <li class="section-title inherited"><a href="eventsourcing/EventRouter-class.html#operators">Operators</a></li>
+      <li class="inherited"><a href="eventsourcing/EventRouter/operator_equals.html">operator ==</a></li>
+    
+      <li class="section-title"><a href="eventsourcing/EventRouter-class.html#instance-methods">Methods</a></li>
+      <li><a href="eventsourcing/EventRouter/backupEvents.html">backupEvents</a></li>
+      <li class="inherited"><a href="eventsourcing/EventRouter/noSuchMethod.html">noSuchMethod</a></li>
+      <li><a href="eventsourcing/EventRouter/replayEvent.html">replayEvent</a></li>
+      <li><a href="eventsourcing/EventRouter/submitEvent.html">submitEvent</a></li>
+      <li><a href="eventsourcing/EventRouter/submitQuery.html">submitQuery</a></li>
+      <li class="inherited"><a href="eventsourcing/EventRouter/toString.html">toString</a></li>
+    </ol>
+  </div><!--/.sidebar-offcanvas-->
+
+</div> <!-- row -->
+</div> <!-- container -->
+
+<footer>
+  <div class="container-fluid">
+    <div class="container">
+      <p class="text-center">
+        <span class="no-break">
+          eventsourcing 0.1.0
+        </span>
+        &bull;
+        <span class="no-break">
+          <a href="https://www.dartlang.org">
+            <img src="static-assets/favicon.png" alt="Dart" title="Dart" width="16" height="16">
+          </a>
+        </span>
+        &bull;
+        <span class="copyright no-break">
+          <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+        </span>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+
+</body>
+
+</html>

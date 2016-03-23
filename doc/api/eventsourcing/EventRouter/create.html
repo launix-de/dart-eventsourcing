@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="API docs for the create method from the EventRouter class, for the Dart programming language.">
+  <title>create method - EventRouter class - eventsourcing library - Dart API</title>
+  <!-- required because all the links are pseudo-absolute -->
+  <base href="../..">
+
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' type='text/css'>
+  <link rel="stylesheet" href="static-assets/prettify.css">
+  <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+
+  <!-- Do not remove placeholder -->
+  <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+  <nav class="navbar navbar-fixed-top">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 contents">
+          <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+          <ol class="breadcrumbs gt-separated hidden-xs">
+            <li><a href="index.html">eventsourcing</a></li>
+            <li><a href="eventsourcing/eventsourcing-library.html">eventsourcing</a></li>
+            <li><a href="eventsourcing/EventRouter-class.html">EventRouter</a></li>
+            <li class="self-crumb">create</li>
+          </ol>
+          <div class="self-name">create</div>
+          <form class="search navbar-right" role="search">
+            <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+          </form>
+        </div> <!-- /col -->
+      </div> <!-- /row -->
+    </div> <!-- /container -->
+  </nav>
+
+  <div class="container masthead">
+    <div class="row">
+      <div class="col-sm-12 contents">
+        <ol class="breadcrumbs gt-separated visible-xs">
+          <li><a href="index.html">eventsourcing</a></li>
+          <li><a href="eventsourcing/eventsourcing-library.html">eventsourcing</a></li>
+          <li><a href="eventsourcing/EventRouter-class.html">EventRouter</a></li>
+          <li class="self-crumb">create</li>
+        </ol>
+        <div class="title-description">
+          <h1 class="title">
+            <span class="kind">method</span> create
+          </h1>
+        </div>
+        <ul class="subnav">
+          <li><a href="eventsourcing/EventRouter/create.html#source">Source</a></li>
+        </ul>
+      </div> <!-- /col -->
+    </div> <!-- /row -->
+  </div> <!-- /container -->
+
+</header>
+
+<div class="container body">
+  <div class="row">
+
+  <div class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">eventsourcing</a></h5>
+    <h5><a href="eventsourcing/eventsourcing-library.html">eventsourcing</a></h5>
+    <h5><a href="eventsourcing/EventRouter-class.html">EventRouter</a></h5>
+
+    <ol>
+    
+    
+      <li class="section-title"><a href="eventsourcing/EventRouter-class.html#static-methods">Static methods</a></li>
+      <li><a href="eventsourcing/EventRouter/create.html">create</a></li>
+    
+    
+      <li class="section-title">
+        <a href="eventsourcing/EventRouter-class.html#instance-properties">Properties</a>
+      </li>
+      <li><a href="eventsourcing/EventRouter/authenticator.html">authenticator</a></li>
+      <li><a href="eventsourcing/EventRouter/backupDirectory.html">backupDirectory</a></li>
+      <li><a href="eventsourcing/EventRouter/connections.html">connections</a></li>
+      <li><a href="eventsourcing/EventRouter/db.html">db</a></li>
+      <li><a href="eventsourcing/EventRouter/eventFile.html">eventFile</a></li>
+      <li><a href="eventsourcing/EventRouter/eventHandler.html">eventHandler</a></li>
+      <li class="inherited"><a href="eventsourcing/EventRouter/hashCode.html">hashCode</a></li>
+      <li><a href="eventsourcing/EventRouter/pushHooks.html">pushHooks</a></li>
+      <li><a href="eventsourcing/EventRouter/queryHandler.html">queryHandler</a></li>
+      <li class="inherited"><a href="eventsourcing/EventRouter/runtimeType.html">runtimeType</a></li>
+    
+      <li class="section-title inherited"><a href="eventsourcing/EventRouter-class.html#operators">Operators</a></li>
+      <li class="inherited"><a href="eventsourcing/EventRouter/operator_equals.html">operator ==</a></li>
+    
+      <li class="section-title"><a href="eventsourcing/EventRouter-class.html#instance-methods">Methods</a></li>
+      <li><a href="eventsourcing/EventRouter/backupEvents.html">backupEvents</a></li>
+      <li class="inherited"><a href="eventsourcing/EventRouter/noSuchMethod.html">noSuchMethod</a></li>
+      <li><a href="eventsourcing/EventRouter/replayEvent.html">replayEvent</a></li>
+      <li><a href="eventsourcing/EventRouter/submitEvent.html">submitEvent</a></li>
+      <li><a href="eventsourcing/EventRouter/submitQuery.html">submitQuery</a></li>
+      <li class="inherited"><a href="eventsourcing/EventRouter/toString.html">toString</a></li>
+    </ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-8 main-content">
+    <section class="multi-line-signature">
+      <span class="returntype">Future&lt;<a href="eventsourcing/EventRouter-class.html">EventRouter</a>&gt;</span>
+      <span class="name ">create</span>(<wbr><span class="parameter" id="create-param-eventHandler"><span class="parameter-name">eventHandler</span></span>, <span class="parameter" id="create-param-queryHandler"><span class="parameter-name">queryHandler</span></span>, {<span class="parameter" id="create-param-eventFilePath"><span class="type-annotation">String</span> <span class="parameter-name">eventFilePath</span>: <span class="default-value">'data/events.dat'</span></span>, <span class="parameter" id="create-param-backupPath"><span class="type-annotation">String</span> <span class="parameter-name">backupPath</span>: <span class="default-value">'data/backup'</span></span>, <span class="parameter" id="create-param-databaseSchemaPath"><span class="type-annotation">String</span> <span class="parameter-name">databaseSchemaPath</span>: <span class="default-value">'lib/schema.sql'</span></span>, <span class="parameter" id="create-param-authenticator"><span class="type-annotation"><a href="eventsourcing/Authenticator.html">Authenticator</a></span> <span class="parameter-name">authenticator</span>(<span class="parameter" id="Authenticator-param-username"><span class="type-annotation">String</span> <span class="parameter-name">username</span></span>, <span class="parameter" id="Authenticator-param-password"><span class="type-annotation">String</span> <span class="parameter-name">password</span></span>, <span class="parameter" id="Authenticator-param-remote"><span class="type-annotation">String</span> <span class="parameter-name">remote</span></span>, <span class="parameter" id="Authenticator-param-db"><span class="type-annotation">QueriableConnection</span> <span class="parameter-name">db</span></span>)</span>})
+    </section>
+    <section class="desc markdown">
+      <p>Erstellt einen neuen <a href="eventsourcing/EventRouter-class.html">EventRouter</a> mit den angegeben <a href="eventsourcing/EventHandler.html">EventHandler</a>n und
+<a href="eventsourcing/QueryHandler.html">QueryHandler</a>n.</p>
+    </section>
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Source</span> </h2>
+      <pre><code class="prettyprint lang-dart">static Future&lt;EventRouter&gt; create(eventHandler, queryHandler,
+    {String eventFilePath: &apos;data/events.dat&apos;,
+    String backupPath: &apos;data/backup&apos;,
+    String databaseSchemaPath: &apos;lib/schema.sql&apos;,
+    Authenticator authenticator}) async {
+  // Instanz anlegen
+  final EventRouter es = new EventRouter._EventRouter(
+      eventHandler,
+      queryHandler,
+      new File(eventFilePath),
+      new Directory(backupPath),
+      authenticator);
+
+  // Backup
+  Future backupFuture = es.backupEvents();
+
+  // Webserver aktivieren
+  //  final frontendHandler =
+  //      shelfstatic.createStaticHandler(&apos;html&apos;, defaultDocument: &apos;index.html&apos;);
+
+  //  final shelfrouter = shelfroute.router();
+
+  // Von 0 bis 1, wie weit das Einspielen der Events fortgeschritten ist
+  double replayProgress = 0.0;
+
+  void handleWs(WebSocket ws, HttpConnectionInfo info) {
+    if (replayProgress &lt; 1) {
+      ws.close(
+          4600 + (replayProgress * 100).floor(), &quot;Events werden abgespielt&quot;);
+    } else {
+      acceptWs(ws, es, info);
+    }
+  }
+
+  //shelfrouter
+  //  ..get(&apos;/wsapi&apos;, wsHandler)
+  //  ..add(&apos;/&apos;, [&apos;GET&apos;], frontendHandler, exactMatch: false); */
+
+  final staticFiles = new VirtualDirectory(&quot;html&quot;)..jailRoot = true;
+  staticFiles.directoryHandler = (dir, request) {
+    final indexUri = new Uri.file(dir.path).resolve(&apos;index.html&apos;);
+    staticFiles.serveFile(new File(indexUri.toFilePath()), request);
+  };
+  final server = await HttpServer.bind(InternetAddress.ANY_IP_V4, 8338);
+  server.forEach((HttpRequest req) async {
+    try {
+      String path = req.uri.path;
+
+      if (path.startsWith(&quot;/wsapi&quot;)) {
+        final WebSocket ws = await WebSocketTransformer.upgrade(req);
+        handleWs(ws, req.connectionInfo);
+      } else {
+        // Static file
+        if (path == &quot;/&quot; || path.isEmpty) path = &quot;/index.html&quot;;
+        path = path.replaceAll(&quot;..&quot;, &quot;&quot;);
+        staticFiles.serveFile(
+            new File(Path.join(&quot;html&quot;, path.substring(1))), req);
+      }
+    } catch (e) {
+      print(
+          &quot;Verarbeitungsfehler bei HTTP-Request von ${req.connectionInfo.remoteAddress.host}&quot;);
+      try {
+        req.response.statusCode = 500;
+        req.response.close();
+      } catch (e) {}
+    }
+  });
+
+  // Datenbank zurücksetzen (falls noch was drin ist)
+  await resetDatabase(new File(databaseSchemaPath), es.db);
+  await backupFuture;
+
+  int startTime = 0;
+  int endTime = new DateTime.now().millisecondsSinceEpoch;
+
+  // Alte Events einspielen
+  await for (Map m in readEventFile(new File(eventFilePath))) {
+    if (startTime == 0 &amp;&amp; m.containsKey(&quot;timestamp&quot;)) {
+      startTime = m[&quot;timestamp&quot;];
+    }
+
+    await es.replayEvent(m);
+
+    if (m.containsKey(&quot;timestamp&quot;)) {
+      replayProgress = (m[&quot;timestamp&quot;] - startTime) / (endTime - startTime);
+    }
+  }
+
+  replayProgress = 1.0;
+  print(&quot;Events erfolgreich eingespielt.&quot;);
+
+  es._eventQueueSink = new EventFileWriter(new File(eventFilePath));
+
+  return es;
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+</div> <!-- row -->
+</div> <!-- container -->
+
+<footer>
+  <div class="container-fluid">
+    <div class="container">
+      <p class="text-center">
+        <span class="no-break">
+          eventsourcing 0.1.0
+        </span>
+        &bull;
+        <span class="no-break">
+          <a href="https://www.dartlang.org">
+            <img src="static-assets/favicon.png" alt="Dart" title="Dart" width="16" height="16">
+          </a>
+        </span>
+        &bull;
+        <span class="copyright no-break">
+          <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+        </span>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+
+</body>
+
+</html>

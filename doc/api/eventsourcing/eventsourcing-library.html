@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="eventsourcing library API docs, for the Dart programming language.">
+  <title>eventsourcing library - Dart API</title>
+  <!-- required because all the links are pseudo-absolute -->
+  <base href="..">
+
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' type='text/css'>
+  <link rel="stylesheet" href="static-assets/prettify.css">
+  <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+
+  <!-- Do not remove placeholder -->
+  <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+  <nav class="navbar navbar-fixed-top">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 contents">
+          <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+          <ol class="breadcrumbs gt-separated hidden-xs">
+            <li><a href="index.html">eventsourcing</a></li>
+            <li class="self-crumb">eventsourcing</li>
+          </ol>
+          <div class="self-name">eventsourcing</div>
+          <form class="search navbar-right" role="search">
+            <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+          </form>
+        </div> <!-- /col -->
+      </div> <!-- /row -->
+    </div> <!-- /container -->
+  </nav>
+
+  <div class="container masthead">
+    <div class="row">
+      <div class="col-sm-12 contents">
+        <ol class="breadcrumbs gt-separated visible-xs">
+          <li><a href="index.html">eventsourcing</a></li>
+          <li class="self-crumb">eventsourcing</li>
+        </ol>
+        <div class="title-description">
+          <h1 class="title">
+            <span class="kind">library</span> eventsourcing
+          </h1>
+        </div>
+        <ul class="subnav">
+          <li><a href="eventsourcing/eventsourcing-library.html#typedefs">Typedefs</a></li>
+          <li><a href="eventsourcing/eventsourcing-library.html#functions">Functions</a></li>
+          <li><a href="eventsourcing/eventsourcing-library.html#enums">Enums</a></li>
+          <li><a href="eventsourcing/eventsourcing-library.html#classes">Classes</a></li>
+        </ul>
+      </div> <!-- /col -->
+    </div> <!-- /row -->
+  </div> <!-- /container -->
+
+</header>
+
+<div class="container body">
+  <div class="row">
+
+  <div class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">eventsourcing</a></h5>
+
+    <ol>
+      <li class="section-title"><a href="index.html">Libraries</a></li>
+      <li><a href="eventsourcing/eventsourcing-library.html">eventsourcing</a></li>
+    </ol>
+  </div>
+
+  <div class="col-xs-12 col-sm-9 col-md-8 main-content">
+
+    
+
+    <section class="summary offset-anchor" id="typedefs">
+      <h2>Typedefs</h2>
+
+      <dl class="callables">
+        <dt id="Authenticator" class="callable">
+          <span class="name"><a href="eventsourcing/Authenticator.html">Authenticator</a></span><span class="signature">(<wbr><span class="parameter" id="Authenticator-param-username"><span class="type-annotation">String</span> <span class="parameter-name">username</span></span>, <span class="parameter" id="Authenticator-param-password"><span class="type-annotation">String</span> <span class="parameter-name">password</span></span>, <span class="parameter" id="Authenticator-param-remote"><span class="type-annotation">String</span> <span class="parameter-name">remote</span></span>, <span class="parameter" id="Authenticator-param-db"><span class="type-annotation">QueriableConnection</span> <span class="parameter-name">db</span></span>)
+            <span class="returntype parameter">&#8594; Future&lt;int&gt;</span>
+          </span>
+        </dt>
+        <dd>
+          <p></p>
+        </dd>
+        <dt id="BaseHandler" class="callable">
+          <span class="name"><a href="eventsourcing/BaseHandler.html">BaseHandler</a></span><span class="signature">(<wbr><span class="parameter" id="BaseHandler-param-data"><span class="type-annotation">Map</span> <span class="parameter-name">data</span></span>, <span class="parameter" id="BaseHandler-param-conn"><span class="type-annotation">QueriableConnection</span> <span class="parameter-name">conn</span></span>)
+            <span class="returntype parameter">&#8594; Future</span>
+          </span>
+        </dt>
+        <dd>
+          <p></p>
+        </dd>
+        <dt id="EventHandler" class="callable">
+          <span class="name"><a href="eventsourcing/EventHandler.html">EventHandler</a></span><span class="signature">(<wbr><span class="parameter" id="EventHandler-param-event"><span class="type-annotation">Map</span> <span class="parameter-name">event</span></span>, <span class="parameter" id="EventHandler-param-trans"><span class="type-annotation">Transaction</span> <span class="parameter-name">trans</span></span>)
+            <span class="returntype parameter">&#8594; Future</span>
+          </span>
+        </dt>
+        <dd>
+          <p></p>
+        </dd>
+        <dt id="EventProvider" class="callable">
+          <span class="name"><a href="eventsourcing/EventProvider.html">EventProvider</a></span><span class="signature">(<wbr>)
+            <span class="returntype parameter">&#8594; Map&lt;String, List&lt;<a href="eventsourcing/EventHandler.html">EventHandler</a>&gt;&gt;</span>
+          </span>
+        </dt>
+        <dd>
+          <p>Stellt benannte Events zur Verfügung</p>
+        </dd>
+        <dt id="QueryHandler" class="callable">
+          <span class="name"><a href="eventsourcing/QueryHandler.html">QueryHandler</a></span><span class="signature">(<wbr><span class="parameter" id="QueryHandler-param-query"><span class="type-annotation">Map</span> <span class="parameter-name">query</span></span>, <span class="parameter" id="QueryHandler-param-pool"><span class="type-annotation">ConnectionPool</span> <span class="parameter-name">pool</span></span>)
+            <span class="returntype parameter">&#8594; Future&lt;Map&gt;</span>
+          </span>
+        </dt>
+        <dd>
+          <p></p>
+        </dd>
+        <dt id="QueryProvider" class="callable">
+          <span class="name"><a href="eventsourcing/QueryProvider.html">QueryProvider</a></span><span class="signature">(<wbr>)
+            <span class="returntype parameter">&#8594; Map&lt;String, List&lt;<a href="eventsourcing/QueryHandler.html">QueryHandler</a>&gt;&gt;</span>
+          </span>
+        </dt>
+        <dd>
+          <p>Stellt benannte Queries zur Verfügung</p>
+        </dd>
+        <dt id="ResultHandler" class="callable">
+          <span class="name"><a href="eventsourcing/ResultHandler.html">ResultHandler</a></span><span class="signature">(<wbr><span class="parameter" id="ResultHandler-param-results"><span class="type-annotation">Results</span> <span class="parameter-name">results</span></span>)
+            <span class="returntype parameter">&#8594; Future&lt;Map&gt;</span>
+          </span>
+        </dt>
+        <dd>
+          <p></p>
+        </dd>
+        <dt id="Validator" class="callable">
+          <span class="name"><a href="eventsourcing/Validator.html">Validator</a></span><span class="signature">(<wbr><span class="parameter" id="Validator-param-data"><span class="type-annotation">Map</span> <span class="parameter-name">data</span></span>, <span class="parameter" id="Validator-param-conn"><span class="type-annotation">QueriableConnection</span> <span class="parameter-name">conn</span></span>)
+            <span class="returntype parameter">&#8594; Future</span>
+          </span>
+        </dt>
+        <dd>
+          <p>Ein Validator ist eine Funktion, die bei Ausführung die Daten in <code>data</code> überprüft
+ (mittels SQL-Verbindung in <code>conn</code>) und einen Future zurückgibt.
+ Tritt ein Validierungsfehler auf, sollte der Future mit einem Fehler beendet werden.
+ Wenn alle Prüfungen erfolgreich vollzogen wurden, sollte der zurückgegebene Future
+ regulär beendet werden.</p>
+        </dd>
+      </dl>
+    </section>
+
+
+    <section class="summary offset-anchor" id="functions">
+      <h2>Functions</h2>
+
+      <dl class="callables">
+        <dt id="acceptWs" class="callable">
+          <span class="name"><a href="eventsourcing/acceptWs.html">acceptWs</a></span><span class="signature">(<wbr><span class="parameter" id="acceptWs-param-w"><span class="type-annotation">WebSocket</span> <span class="parameter-name">w</span></span>, <span class="parameter" id="acceptWs-param-router"><span class="type-annotation"><a href="eventsourcing/EventRouter-class.html">EventRouter</a></span> <span class="parameter-name">router</span></span>, <span class="parameter" id="acceptWs-param-info"><span class="type-annotation">HttpConnectionInfo</span> <span class="parameter-name">info</span></span>)
+            <span class="returntype parameter">&#8594; void</span>
+          </span>
+        </dt>
+        <dd>
+          <p></p>
+        </dd>
+        <dt id="aggregate" class="callable">
+          <span class="name"><a href="eventsourcing/aggregate.html">aggregate</a></span><span class="signature">(<wbr><span class="parameter" id="aggregate-param-arrayName"><span class="type-annotation">String</span> <span class="parameter-name">arrayName</span></span>, <span class="parameter" id="aggregate-param-primaryKey"><span class="type-annotation">String</span> <span class="parameter-name">primaryKey</span></span>, <span class="parameter" id="aggregate-param-subArrayPrefix"><span class="type-annotation">String</span> <span class="parameter-name">subArrayPrefix</span></span>, <span class="parameter" id="aggregate-param-query"><span class="type-annotation"><a href="eventsourcing/QueryHandler.html">QueryHandler</a></span> <span class="parameter-name">query</span>(<span class="parameter" id="QueryHandler-param-query"><span class="type-annotation">Map</span> <span class="parameter-name">query</span></span>, <span class="parameter" id="QueryHandler-param-pool"><span class="type-annotation">ConnectionPool</span> <span class="parameter-name">pool</span></span>)</span>)
+            <span class="returntype parameter">&#8594; <a href="eventsourcing/QueryHandler.html">QueryHandler</a></span>
+          </span>
+        </dt>
+        <dd>
+          <p></p>
+        </dd>
+        <dt id="combineEventProviders" class="callable">
+          <span class="name"><a href="eventsourcing/combineEventProviders.html">combineEventProviders</a></span><span class="signature">(<wbr><span class="parameter" id="combineEventProviders-param-providers"><span class="type-annotation">List&lt;<a href="eventsourcing/EventProvider.html">EventProvider</a>&gt;</span> <span class="parameter-name">providers</span></span>)
+            <span class="returntype parameter">&#8594; Map&lt;String, List&lt;<a href="eventsourcing/EventHandler.html">EventHandler</a>&gt;&gt;</span>
+          </span>
+        </dt>
+        <dd>
+          <p>Kombiniert die Events aus mehreren <a href="eventsourcing/EventProvider.html">EventProvider</a>n in einer Map</p>
+        </dd>
+        <dt id="combineQueryProviders" class="callable">
+          <span class="name"><a href="eventsourcing/combineQueryProviders.html">combineQueryProviders</a></span><span class="signature">(<wbr><span class="parameter" id="combineQueryProviders-param-providers"><span class="type-annotation">List&lt;<a href="eventsourcing/QueryHandler.html">QueryHandler</a>&gt;</span> <span class="parameter-name">providers</span></span>)
+            <span class="returntype parameter">&#8594; Map&lt;String, List&lt;<a href="eventsourcing/QueryHandler.html">QueryHandler</a>&gt;&gt;</span>
+          </span>
+        </dt>
+        <dd>
+          <p>Kombiniert die Events aus mehreren <a href="eventsourcing/QueryProvider.html">QueryProvider</a>n in einer Map</p>
+        </dd>
+        <dt id="combineValidatorsOr" class="callable">
+          <span class="name"><a href="eventsourcing/combineValidatorsOr.html">combineValidatorsOr</a></span><span class="signature">(<wbr><span class="parameter" id="combineValidatorsOr-param-validators"><span class="type-annotation">List&lt;<a href="eventsourcing/Validator.html">Validator</a>&gt;</span> <span class="parameter-name">validators</span></span>, <span class="parameter" id="combineValidatorsOr-param-errorMessage"><span class="type-annotation">String</span> <span class="parameter-name">errorMessage</span></span>)
+            <span class="returntype parameter">&#8594; <a href="eventsourcing/Validator.html">Validator</a></span>
+          </span>
+        </dt>
+        <dd>
+          <p></p>
+        </dd>
+        <dt id="deprecatedHandler" class="callable">
+          <span class="name"><a href="eventsourcing/deprecatedHandler.html">deprecatedHandler</a></span><span class="signature">(<wbr><span class="parameter" id="deprecatedHandler-param-e"><span class="type-annotation">Map</span> <span class="parameter-name">e</span></span>, <span class="parameter" id="deprecatedHandler-param-trans"><span class="type-annotation">Transaction</span> <span class="parameter-name">trans</span></span>)
+            <span class="returntype parameter">&#8594; Future&lt;Map&gt;</span>
+          </span>
+        </dt>
+        <dd>
+          <p>EventHandler, der einen "Deprecated"-Fehler wirft. <strong>Achtung</strong>: Einmal verwendete
+Events dürfen nie entfernt werden, da sie ja bei jedem Start neu eingelesen werden.</p>
+        </dd>
+        <dt id="emptyHandler" class="callable">
+          <span class="name"><a href="eventsourcing/emptyHandler.html">emptyHandler</a></span><span class="signature">(<wbr><span class="parameter" id="emptyHandler-param-e"><span class="type-annotation">Map</span> <span class="parameter-name">e</span></span>, <span class="parameter" id="emptyHandler-param-trans"><span class="type-annotation">Transaction</span> <span class="parameter-name">trans</span></span>)
+            <span class="returntype parameter">&#8594; Future&lt;Map&gt;</span>
+          </span>
+        </dt>
+        <dd>
+          <p>EventHandler, der nichts tut</p>
+        </dd>
+        <dt id="filterQuery" class="callable">
+          <span class="name"><a href="eventsourcing/filterQuery.html">filterQuery</a></span><span class="signature">(<wbr><span class="parameter" id="filterQuery-param-viewName"><span class="type-annotation">String</span> <span class="parameter-name">viewName</span></span>)
+            <span class="returntype parameter">&#8594; <a href="eventsourcing/QueryHandler.html">QueryHandler</a></span>
+          </span>
+        </dt>
+        <dd>
+          <p>Dient dem Filtern einer Tabelle / Views aus der Datenbank bzw. der Suche und Sortierung.<a href="eventsourcing/filterQuery.html">&hellip;</a>
+</p>
+        </dd>
+        <dt id="prepareSQL" class="callable">
+          <span class="name"><a href="eventsourcing/prepareSQL.html">prepareSQL</a></span><span class="signature">(<wbr><span class="parameter" id="prepareSQL-param-sql"><span class="type-annotation">String</span> <span class="parameter-name">sql</span></span>)
+            <span class="returntype parameter">&#8594; <a href="eventsourcing/EventHandler.html">EventHandler</a></span>
+          </span>
+        </dt>
+        <dd>
+          <p>Gibt einen <a href="eventsourcing/EventHandler.html">EventHandler</a> zurück, der bei Aufruf den Query ausführt, Platzhalter darin ersetzt
+und ansonsten kein Ergebnis zurückliefert.</p>
+        </dd>
+        <dt id="prepareSQLDetail" class="callable">
+          <span class="name"><a href="eventsourcing/prepareSQLDetail.html">prepareSQLDetail</a></span><span class="signature">(<wbr><span class="parameter" id="prepareSQLDetail-param-sql"><span class="type-annotation">String</span> <span class="parameter-name">sql</span></span>)
+            <span class="returntype parameter">&#8594; <a href="eventsourcing/QueryHandler.html">QueryHandler</a></span>
+          </span>
+        </dt>
+        <dd>
+          <p>Gibt einen <a href="eventsourcing/QueryHandler.html">QueryHandler</a> zurück, der bei Aufruf den Query ausführt, Platzhalter darin ersetzt
+und die erste Ergebniszeile zurückliefert. Enthält die Antwort vom SQL-Server
+keine oder mehr als eine Zeilen, wird eine Exception geworfen.</p>
+        </dd>
+        <dt id="prepareSQLDetailRenamed" class="callable">
+          <span class="name"><a href="eventsourcing/prepareSQLDetailRenamed.html">prepareSQLDetailRenamed</a></span><span class="signature">(<wbr><span class="parameter" id="prepareSQLDetailRenamed-param-sql"><span class="type-annotation">String</span> <span class="parameter-name">sql</span></span>, <span class="parameter" id="prepareSQLDetailRenamed-param-outputNames"><span class="type-annotation">List&lt;String&gt;</span> <span class="parameter-name">outputNames</span></span>)
+            <span class="returntype parameter">&#8594; <a href="eventsourcing/QueryHandler.html">QueryHandler</a></span>
+          </span>
+        </dt>
+        <dd>
+          <p></p>
+        </dd>
+        <dt id="prepareSQLList" class="callable">
+          <span class="name"><a href="eventsourcing/prepareSQLList.html">prepareSQLList</a></span><span class="signature">(<wbr><span class="parameter" id="prepareSQLList-param-sql"><span class="type-annotation">String</span> <span class="parameter-name">sql</span></span>, [<span class="parameter" id="prepareSQLList-param-fieldName"><span class="type-annotation">String</span> <span class="parameter-name">fieldName</span> = <span class="default-value">"result"</span></span>])
+            <span class="returntype parameter">&#8594; <a href="eventsourcing/QueryHandler.html">QueryHandler</a></span>
+          </span>
+        </dt>
+        <dd>
+          <p>Gibt einen <a href="eventsourcing/QueryHandler.html">QueryHandler</a> zurück, der bei Aufruf den Query ausführt, Platzhalter darin ersetzt
+und eine Liste mit den Ergebniszeilen zurückliefert (Eintrag <code>fieldName</code> in der Map).</p>
+        </dd>
+        <dt id="prepareSQLListRenamed" class="callable">
+          <span class="name"><a href="eventsourcing/prepareSQLListRenamed.html">prepareSQLListRenamed</a></span><span class="signature">(<wbr><span class="parameter" id="prepareSQLListRenamed-param-sql"><span class="type-annotation">String</span> <span class="parameter-name">sql</span></span>, <span class="parameter" id="prepareSQLListRenamed-param-fieldName"><span class="type-annotation">String</span> <span class="parameter-name">fieldName</span></span>, <span class="parameter" id="prepareSQLListRenamed-param-outputNames"><span class="type-annotation">List&lt;String&gt;</span> <span class="parameter-name">outputNames</span></span>)
+            <span class="returntype parameter">&#8594; <a href="eventsourcing/QueryHandler.html">QueryHandler</a></span>
+          </span>
+        </dt>
+        <dd>
+          <p>Gibt einen <a href="eventsourcing/QueryHandler.html">QueryHandler</a> zurück, der bei Aufruf den Query ausführt, Platzhalter darin ersetzt
+und eine Liste mit den Ergebniszeilen zurückliefert (Eintrag <code>fieldName</code> in der Map).
+Die</p>
+        </dd>
+        <dt id="prepareSQLSub" class="callable">
+          <span class="name"><a href="eventsourcing/prepareSQLSub.html">prepareSQLSub</a></span><span class="signature">(<wbr><span class="parameter" id="prepareSQLSub-param-sql"><span class="type-annotation">String</span> <span class="parameter-name">sql</span></span>, <span class="parameter" id="prepareSQLSub-param-sub"><span class="type-annotation"><a href="eventsourcing/ResultHandler.html">ResultHandler</a></span> <span class="parameter-name">sub</span>(<span class="parameter" id="ResultHandler-param-results"><span class="type-annotation">Results</span> <span class="parameter-name">results</span></span>)</span>)
+            <span class="returntype parameter">&#8594; <a href="eventsourcing/BaseHandler.html">BaseHandler</a></span>
+          </span>
+        </dt>
+        <dd>
+          <p>Gibt einen <a href="eventsourcing/EventHandler.html">EventHandler</a> zurück, der bei Aufruf einen SQL-Query ausführt.
+Bei Ausführung des <a href="eventsourcing/EventHandler.html">EventHandler</a>s werden dabei die Platzhalter in <code>sql</code> nach dem Format "::EINTRAG::"
+durch den jeweiligen Eventparameter EINTRAG ersetzt.
+<a href="eventsourcing/ResultHandler.html">ResultHandler</a> gibt an, was der EventHandler letztendlich zurückgibt.</p>
+        </dd>
+        <dt id="readEventFile" class="callable">
+          <span class="name"><a href="eventsourcing/readEventFile.html">readEventFile</a></span><span class="signature">(<wbr><span class="parameter" id="readEventFile-param-eventFile"><span class="type-annotation">File</span> <span class="parameter-name">eventFile</span></span>)
+            <span class="returntype parameter">&#8594; Stream&lt;Map&gt;</span>
+          </span>
+        </dt>
+        <dd>
+          <p>Liest die Datei ein und generiert einen String, der die enthaltenen Events enthält.
+ Da yield in Dart aktuell synchron implementiert ist, wird die Datei nur so schnell
+ eingelesen, wie die Daten aus dem Stream entnommen werden.
+ Dateiformat: UINT16 (BE) Eventlänge n gefolgt von UTF8-kodiertem JSON-String mit dem Event (n Bytes)</p>
+        </dd>
+        <dt id="resetDatabase" class="callable">
+          <span class="name"><a href="eventsourcing/resetDatabase.html">resetDatabase</a></span><span class="signature">(<wbr><span class="parameter" id="resetDatabase-param-schemaFile"><span class="type-annotation">File</span> <span class="parameter-name">schemaFile</span></span>, <span class="parameter" id="resetDatabase-param-db"><span class="type-annotation">ConnectionPool</span> <span class="parameter-name">db</span></span>)
+            <span class="returntype parameter">&#8594; Future</span>
+          </span>
+        </dt>
+        <dd>
+          <p></p>
+        </dd>
+        <dt id="resultsToMap" class="callable">
+          <span class="name"><a href="eventsourcing/resultsToMap.html">resultsToMap</a></span><span class="signature">(<wbr><span class="parameter" id="resultsToMap-param-r"><span class="type-annotation">Results</span> <span class="parameter-name">r</span></span>, [<span class="parameter" id="resultsToMap-param-wantedNames"><span class="type-annotation">Iterable&lt;String&gt;</span> <span class="parameter-name">wantedNames</span> = <span class="default-value">null</span></span>])
+            <span class="returntype parameter">&#8594; Stream&lt;Map&lt;String, dynamic&gt;&gt;</span>
+          </span>
+        </dt>
+        <dd>
+          <p>Konvertiert ein <code>Results</code>-Objekt der <code>sqljocky</code>-Bibliothek (Stream von SQL-Ergebniszeilen)
+in einen Stream von Maps.</p>
+        </dd>
+        <dt id="validatorSQLReturnsAtLeastOneLine" class="callable">
+          <span class="name"><a href="eventsourcing/validatorSQLReturnsAtLeastOneLine.html">validatorSQLReturnsAtLeastOneLine</a></span><span class="signature">(<wbr><span class="parameter" id="validatorSQLReturnsAtLeastOneLine-param-sql"><span class="type-annotation">String</span> <span class="parameter-name">sql</span></span>, [<span class="parameter" id="validatorSQLReturnsAtLeastOneLine-param-error"><span class="type-annotation">String</span> <span class="parameter-name">error</span> = <span class="default-value">"Kein leeres Ergebnis erwartet"</span></span>])
+            <span class="returntype parameter">&#8594; <a href="eventsourcing/Validator.html">Validator</a></span>
+          </span>
+        </dt>
+        <dd>
+          <p>Gibt einen Validator zurück, der eine Exception <code>error</code> wirft, wenn die Antwort auf den Query in <code>sql</code>
+leer ist. Platzhalter in <code>sql</code> werden ersetzt.</p>
+        </dd>
+        <dt id="validatorSQLReturnsEmptyResult" class="callable">
+          <span class="name"><a href="eventsourcing/validatorSQLReturnsEmptyResult.html">validatorSQLReturnsEmptyResult</a></span><span class="signature">(<wbr><span class="parameter" id="validatorSQLReturnsEmptyResult-param-sql"><span class="type-annotation">String</span> <span class="parameter-name">sql</span></span>, [<span class="parameter" id="validatorSQLReturnsEmptyResult-param-error"><span class="type-annotation">String</span> <span class="parameter-name">error</span> = <span class="default-value">"Leeres Ergebnis erwartet"</span></span>])
+            <span class="returntype parameter">&#8594; <a href="eventsourcing/Validator.html">Validator</a></span>
+          </span>
+        </dt>
+        <dd>
+          <p>Gibt einen Validator zurück, der eine Exception <code>error</code> wirft, wenn die Antwort auf den Query in <code>sql</code>
+nicht leer ist. Platzhalter in <code>sql</code> werden ersetzt.</p>
+        </dd>
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="enums">
+      <h2>Enums</h2>
+
+      <dl>
+        <dt id="QueryFilterMode">
+          <a href="eventsourcing/QueryFilterMode-class.html">QueryFilterMode</a>
+        </dt>
+        <dd>
+          <p></p>
+        </dd>
+        <dt id="WebSocketState">
+          <a href="eventsourcing/WebSocketState-class.html">WebSocketState</a>
+        </dt>
+        <dd>
+          <p></p>
+        </dd>
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="classes">
+      <h2>Classes</h2>
+
+      <dl>
+        <dt id="EventFileWriter">
+          <span class="name "><a href="eventsourcing/EventFileWriter-class.html">EventFileWriter</a></span>
+        </dt>
+        <dd>
+          <p>Gibt einen StreamController zurück, in den neue Events geschrieben werden können.
+ Neue Events werden an <a href="eventsourcing/EventFileWriter/eventFile.html">eventFile</a> angehängt.</p>
+        </dd>
+        <dt id="EventRouter">
+          <span class="name "><a href="eventsourcing/EventRouter-class.html">EventRouter</a></span>
+        </dt>
+        <dd>
+          <p>Hauptklasse, die für eine Instanz des EventSourcing-Systems steht.
+ Integriert Datenbankzugriff (MySQL mit sqljocky), Eventsourcing in der Datei <code>eventsFile</code>
+ und einen Webserver mit speziellem WebSocket-Protokoll (siehe <code>WebSocketClient</code>)
+ sowie Auslieferung von statischen Dateien in "html".
+ Bei Start wird die aktuelle EventQueue in <a href="eventsourcing/EventRouter/eventFile.html">eventFile</a> in eine neue Datei in
+ <a href="eventsourcing/EventRouter/backupDirectory.html">backupDirectory</a> gesichert.</p>
+        </dd>
+        <dt id="QueryFilter">
+          <span class="name "><a href="eventsourcing/QueryFilter-class.html">QueryFilter</a></span>
+        </dt>
+        <dd>
+          <p></p>
+        </dd>
+        <dt id="Subscription">
+          <span class="name "><a href="eventsourcing/Subscription-class.html">Subscription</a></span>
+        </dt>
+        <dd>
+          <p></p>
+        </dd>
+        <dt id="WebSocketConnection">
+          <span class="name "><a href="eventsourcing/WebSocketConnection-class.html">WebSocketConnection</a></span>
+        </dt>
+        <dd>
+          <p></p>
+        </dd>
+      </dl>
+    </section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+    <h5>eventsourcing</h5>
+    <ol>
+    
+      <li class="section-title"><a href="eventsourcing/eventsourcing-library.html#typedefs">Typedefs</a></li>
+      <li><a href="eventsourcing/Authenticator.html">Authenticator</a></li>
+      <li><a href="eventsourcing/BaseHandler.html">BaseHandler</a></li>
+      <li><a href="eventsourcing/EventHandler.html">EventHandler</a></li>
+      <li><a href="eventsourcing/EventProvider.html">EventProvider</a></li>
+      <li><a href="eventsourcing/QueryHandler.html">QueryHandler</a></li>
+      <li><a href="eventsourcing/QueryProvider.html">QueryProvider</a></li>
+      <li><a href="eventsourcing/ResultHandler.html">ResultHandler</a></li>
+      <li><a href="eventsourcing/Validator.html">Validator</a></li>
+    
+    
+      <li class="section-title"><a href="eventsourcing/eventsourcing-library.html#functions">Functions</a></li>
+      <li><a href="eventsourcing/acceptWs.html">acceptWs</a></li>
+      <li><a href="eventsourcing/aggregate.html">aggregate</a></li>
+      <li><a href="eventsourcing/combineEventProviders.html">combineEventProviders</a></li>
+      <li><a href="eventsourcing/combineQueryProviders.html">combineQueryProviders</a></li>
+      <li><a href="eventsourcing/combineValidatorsOr.html">combineValidatorsOr</a></li>
+      <li><a href="eventsourcing/deprecatedHandler.html">deprecatedHandler</a></li>
+      <li><a href="eventsourcing/emptyHandler.html">emptyHandler</a></li>
+      <li><a href="eventsourcing/filterQuery.html">filterQuery</a></li>
+      <li><a href="eventsourcing/prepareSQL.html">prepareSQL</a></li>
+      <li><a href="eventsourcing/prepareSQLDetail.html">prepareSQLDetail</a></li>
+      <li><a href="eventsourcing/prepareSQLDetailRenamed.html">prepareSQLDetailRenamed</a></li>
+      <li><a href="eventsourcing/prepareSQLList.html">prepareSQLList</a></li>
+      <li><a href="eventsourcing/prepareSQLListRenamed.html">prepareSQLListRenamed</a></li>
+      <li><a href="eventsourcing/prepareSQLSub.html">prepareSQLSub</a></li>
+      <li><a href="eventsourcing/readEventFile.html">readEventFile</a></li>
+      <li><a href="eventsourcing/resetDatabase.html">resetDatabase</a></li>
+      <li><a href="eventsourcing/resultsToMap.html">resultsToMap</a></li>
+      <li><a href="eventsourcing/validatorSQLReturnsAtLeastOneLine.html">validatorSQLReturnsAtLeastOneLine</a></li>
+      <li><a href="eventsourcing/validatorSQLReturnsEmptyResult.html">validatorSQLReturnsEmptyResult</a></li>
+    
+      <li class="section-title"><a href="eventsourcing/eventsourcing-library.html#enums">Enums</a></li>
+      <li><a href="eventsourcing/QueryFilterMode-class.html">QueryFilterMode</a></li>
+      <li><a href="eventsourcing/WebSocketState-class.html">WebSocketState</a></li>
+    
+      <li class="section-title"><a href="eventsourcing/eventsourcing-library.html#classes">Classes</a></li>
+      <li><a href="eventsourcing/EventFileWriter-class.html">EventFileWriter</a></li>
+      <li><a href="eventsourcing/EventRouter-class.html">EventRouter</a></li>
+      <li><a href="eventsourcing/QueryFilter-class.html">QueryFilter</a></li>
+      <li><a href="eventsourcing/Subscription-class.html">Subscription</a></li>
+      <li><a href="eventsourcing/WebSocketConnection-class.html">WebSocketConnection</a></li>
+    
+    </ol>
+  </div><!--/sidebar-offcanvas-right-->
+
+</div> <!-- row -->
+</div> <!-- container -->
+
+<footer>
+  <div class="container-fluid">
+    <div class="container">
+      <p class="text-center">
+        <span class="no-break">
+          eventsourcing 0.1.0
+        </span>
+        &bull;
+        <span class="no-break">
+          <a href="https://www.dartlang.org">
+            <img src="static-assets/favicon.png" alt="Dart" title="Dart" width="16" height="16">
+          </a>
+        </span>
+        &bull;
+        <span class="copyright no-break">
+          <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+        </span>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+
+</body>
+
+</html>

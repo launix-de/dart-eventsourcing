@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="API docs for the filterQuery function from the eventsourcing library, for the Dart programming language.">
+  <title>filterQuery function - eventsourcing library - Dart API</title>
+  <!-- required because all the links are pseudo-absolute -->
+  <base href="..">
+
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:500,400italic,300,400' type='text/css'>
+  <link rel="stylesheet" href="static-assets/prettify.css">
+  <link rel="stylesheet" href="static-assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+
+  <!-- Do not remove placeholder -->
+  <!-- Header Placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header class="container-fluid" id="title">
+  <nav class="navbar navbar-fixed-top">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 contents">
+          <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+          <ol class="breadcrumbs gt-separated hidden-xs">
+            <li><a href="index.html">eventsourcing</a></li>
+            <li><a href="eventsourcing/eventsourcing-library.html">eventsourcing</a></li>
+            <li class="self-crumb">filterQuery</li>
+          </ol>
+          <div class="self-name">filterQuery</div>
+          <form class="search navbar-right" role="search">
+            <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+          </form>
+        </div> <!-- /col -->
+      </div> <!-- /row -->
+    </div> <!-- /container -->
+  </nav>
+
+  <div class="container masthead">
+    <div class="row">
+      <div class="col-sm-12 contents">
+        <ol class="breadcrumbs gt-separated visible-xs">
+          <li><a href="index.html">eventsourcing</a></li>
+          <li><a href="eventsourcing/eventsourcing-library.html">eventsourcing</a></li>
+          <li class="self-crumb">filterQuery</li>
+        </ol>
+        <div class="title-description">
+          <h1 class="title">
+            <span class="kind">function</span> filterQuery
+          </h1>
+        </div>
+        <ul class="subnav">
+          <li><a href="eventsourcing/filterQuery.html#source">Source</a></li>
+        </ul>
+      </div> <!-- /col -->
+    </div> <!-- /row -->
+  </div> <!-- /container -->
+
+</header>
+
+<div class="container body">
+  <div class="row">
+
+  <div class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <h5><a href="index.html">eventsourcing</a></h5>
+    <h5><a href="eventsourcing/eventsourcing-library.html">eventsourcing</a></h5>
+    <ol>
+    
+      <li class="section-title"><a href="eventsourcing/eventsourcing-library.html#typedefs">Typedefs</a></li>
+      <li><a href="eventsourcing/Authenticator.html">Authenticator</a></li>
+      <li><a href="eventsourcing/BaseHandler.html">BaseHandler</a></li>
+      <li><a href="eventsourcing/EventHandler.html">EventHandler</a></li>
+      <li><a href="eventsourcing/EventProvider.html">EventProvider</a></li>
+      <li><a href="eventsourcing/QueryHandler.html">QueryHandler</a></li>
+      <li><a href="eventsourcing/QueryProvider.html">QueryProvider</a></li>
+      <li><a href="eventsourcing/ResultHandler.html">ResultHandler</a></li>
+      <li><a href="eventsourcing/Validator.html">Validator</a></li>
+    
+    
+      <li class="section-title"><a href="eventsourcing/eventsourcing-library.html#functions">Functions</a></li>
+      <li><a href="eventsourcing/acceptWs.html">acceptWs</a></li>
+      <li><a href="eventsourcing/aggregate.html">aggregate</a></li>
+      <li><a href="eventsourcing/combineEventProviders.html">combineEventProviders</a></li>
+      <li><a href="eventsourcing/combineQueryProviders.html">combineQueryProviders</a></li>
+      <li><a href="eventsourcing/combineValidatorsOr.html">combineValidatorsOr</a></li>
+      <li><a href="eventsourcing/deprecatedHandler.html">deprecatedHandler</a></li>
+      <li><a href="eventsourcing/emptyHandler.html">emptyHandler</a></li>
+      <li><a href="eventsourcing/filterQuery.html">filterQuery</a></li>
+      <li><a href="eventsourcing/prepareSQL.html">prepareSQL</a></li>
+      <li><a href="eventsourcing/prepareSQLDetail.html">prepareSQLDetail</a></li>
+      <li><a href="eventsourcing/prepareSQLDetailRenamed.html">prepareSQLDetailRenamed</a></li>
+      <li><a href="eventsourcing/prepareSQLList.html">prepareSQLList</a></li>
+      <li><a href="eventsourcing/prepareSQLListRenamed.html">prepareSQLListRenamed</a></li>
+      <li><a href="eventsourcing/prepareSQLSub.html">prepareSQLSub</a></li>
+      <li><a href="eventsourcing/readEventFile.html">readEventFile</a></li>
+      <li><a href="eventsourcing/resetDatabase.html">resetDatabase</a></li>
+      <li><a href="eventsourcing/resultsToMap.html">resultsToMap</a></li>
+      <li><a href="eventsourcing/validatorSQLReturnsAtLeastOneLine.html">validatorSQLReturnsAtLeastOneLine</a></li>
+      <li><a href="eventsourcing/validatorSQLReturnsEmptyResult.html">validatorSQLReturnsEmptyResult</a></li>
+    
+      <li class="section-title"><a href="eventsourcing/eventsourcing-library.html#enums">Enums</a></li>
+      <li><a href="eventsourcing/QueryFilterMode-class.html">QueryFilterMode</a></li>
+      <li><a href="eventsourcing/WebSocketState-class.html">WebSocketState</a></li>
+    
+      <li class="section-title"><a href="eventsourcing/eventsourcing-library.html#classes">Classes</a></li>
+      <li><a href="eventsourcing/EventFileWriter-class.html">EventFileWriter</a></li>
+      <li><a href="eventsourcing/EventRouter-class.html">EventRouter</a></li>
+      <li><a href="eventsourcing/QueryFilter-class.html">QueryFilter</a></li>
+      <li><a href="eventsourcing/Subscription-class.html">Subscription</a></li>
+      <li><a href="eventsourcing/WebSocketConnection-class.html">WebSocketConnection</a></li>
+    
+    </ol>
+  </div><!--/.sidebar-offcanvas-left-->
+
+  <div class="col-xs-12 col-sm-9 col-md-8 main-content">
+
+    <section class="multi-line-signature">
+        <span class="returntype"><a href="eventsourcing/QueryHandler.html">QueryHandler</a></span>
+        <span class="name ">filterQuery</span>(<wbr><span class="parameter" id="filterQuery-param-viewName"><span class="type-annotation">String</span> <span class="parameter-name">viewName</span></span>)
+    </section>
+    <section class="desc markdown">
+      <p>Dient dem Filtern einer Tabelle / Views aus der Datenbank bzw. der Suche und Sortierung.</p>
+<p>In der JSON-Anfrage können Listen von möglichen Spaltenwerten angefragt werden:</p>
+<pre class="prettyprint lang-dart"><code>	{"action": "auftragAuflisten", "list": ["ort","monat"]}
+	=&gt; {"result": [...], "list": {"ort": [{"name": "negersdorf", "count": 10}], "monat": [{"name": "januar", count: 5}]
+</code></pre>
+<p>Außerdem können Filterwünsche mitgeschickt werden:</p>
+<pre class="prettyprint lang-dart"><code>	{"action": "auftragAuflisten", "filter": {"kunde": "=3"}, "offset": 0}
+	=&gt; {"result": [{"kunde": "3", "ort": "negersdorf"}]}
+</code></pre>
+<p>Filterwünsche können mit AND und OR geschachtelt werden:</p>
+<pre class="prettyprint lang-dart"><code>	filter:{"kunde": "3", "AND": {"zeit": "&gt;=3000", "AND": {"zeit": "&lt;=6000"}}}
+</code></pre>
+<p>Das Wurzelfilterobjekt X ({"filter": X} in der Anfrage) wird als AND-verknüpft angenommen.
+Es kann nur nach alphanumerischen Zeichenketten / Zahlen gesucht werden.
+Mögliche Operatoren sind &lt;, &gt;, &gt;=, &lt;=, &gt;=, =, ~ (enthält). Wird kein Operator angegeben, wird = angenommen.</p>
+<p>Ferner ist es möglich, eine Sortierung der Ausgabe anzufordern:</p>
+<pre class="prettyprint lang-dart"><code>	{"action": "auftragAuflisten", "order": [{"name": "zeit", "order": "ASC"}]}
+</code></pre>
+    </section>
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Source</span> </h2>
+      <pre><code class="prettyprint lang-dart">QueryHandler filterQuery(String viewName) {
+  return (Map input, QueriableConnection db) async {
+    final Map data = {};
+    final QueryHandler columnSelector = prepareSQLListRenamed(
+        &quot;SHOW COLUMNS FROM $viewName&quot;, &quot;result&quot;, [&quot;column&quot;]);
+    final Map&lt;String, QueryHandler&gt; columnMap = {};
+    ((await columnSelector(new Map.from(input), db))[&quot;result&quot;] as List)
+        .forEach((col) {
+      columnMap[col[&quot;column&quot;]] = null;
+    });
+
+    final List&lt;String&gt; requestedValuesWanted =
+        input.containsKey(&quot;list&quot;) ? input[&quot;list&quot;] : null;
+    final Map valuesWanted = {};
+    String query = &quot;SELECT * FROM $viewName&quot;;
+    String countQuery = &quot;SELECT count(*) AS count FROM &quot; + viewName;
+    String listQueryWhere = &quot;&quot;;
+    final Map requestedFilter =
+        input.containsKey(&quot;filter&quot;) ? input[&quot;filter&quot;] : null;
+    if (requestedFilter != null &amp;&amp; requestedFilter.isNotEmpty) {
+      final String addon = &quot; WHERE &quot; +
+          (new QueryFilter(QueryFilterMode.AND, requestedFilter,
+                  columnMap.keys.toList()))
+              .toString();
+
+      query += addon;
+      countQuery += addon;
+      listQueryWhere = addon.trim();
+    }
+
+    final List&lt;Map&gt; requestedOrder =
+        input.containsKey(&quot;order&quot;) ? input[&quot;order&quot;] : null;
+    if (requestedOrder != null &amp;&amp; requestedOrder.isNotEmpty) {
+      query += &quot; ORDER BY &quot;;
+      int i = 0;
+      for (Map obj in requestedOrder) {
+        final String columnName = obj[&quot;name&quot;];
+        if (!columnMap.keys.contains(columnName))
+          throw &quot;Derartige Sortierung ist nicht erlaubt.&quot;;
+
+        String order = obj.containsKey(&quot;order&quot;) ? obj[&quot;order&quot;] : null;
+        if (order.isEmpty || order == &quot;ASC&quot;)
+          order = &quot;ASC&quot;;
+        else
+          order = &quot;DESC&quot;;
+
+        if (i &gt; 0) query += &quot;, &quot;;
+        query += columnName + &quot; &quot; + order;
+        i++;
+      }
+    }
+
+    // Beispieldaten raussuchen, die im &quot;list&quot;-Parameter angefragt wurden
+    columnMap.forEach((columnName, _) {
+      columnMap[columnName] = prepareSQLListRenamed(
+          &quot;SELECT $columnName, count(*) FROM $viewName $listQueryWhere GROUP BY $columnName&quot;,
+          &quot;result&quot;,
+          [&quot;name&quot;, &quot;count&quot;]);
+    });
+
+    if (requestedValuesWanted != null) {
+      for (String columnName in requestedValuesWanted) {
+        if (!columnMap.containsKey(columnName))
+          throw &quot;Keine Spalte $columnName.&quot;;
+
+        final List&lt;Map&gt; possibleValues =
+            (await columnMap[columnName]({}, db))[&quot;result&quot;];
+
+        valuesWanted[columnName] = possibleValues;
+      }
+      data[&quot;list&quot;] = valuesWanted;
+    }
+
+    final int offset = data.containsKey(&quot;offset&quot;) ? data[&quot;offset&quot;] : 0;
+    query += &quot; LIMIT 20 OFFSET $offset&quot;;
+
+    final int rowCount = (await prepareSQLDetail(countQuery)({}, db))[&quot;count&quot;];
+
+    final List&lt;Map&gt; result = (await prepareSQLList(query)({}, db))[&quot;result&quot;];
+
+    data[&quot;rowCount&quot;] = rowCount;
+    data[&quot;result&quot;] = result;
+
+    return data;
+  };
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+</div> <!-- row -->
+</div> <!-- container -->
+
+<footer>
+  <div class="container-fluid">
+    <div class="container">
+      <p class="text-center">
+        <span class="no-break">
+          eventsourcing 0.1.0
+        </span>
+        &bull;
+        <span class="no-break">
+          <a href="https://www.dartlang.org">
+            <img src="static-assets/favicon.png" alt="Dart" title="Dart" width="16" height="16">
+          </a>
+        </span>
+        &bull;
+        <span class="copyright no-break">
+          <a href="http://creativecommons.org/licenses/by-sa/4.0/">cc license</a>
+        </span>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/prettify.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- Do not remove placeholder -->
+<!-- Footer Placeholder -->
+
+</body>
+
+</html>
