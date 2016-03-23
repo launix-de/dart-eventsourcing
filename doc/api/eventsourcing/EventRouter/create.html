@@ -152,7 +152,7 @@
       ws.close(
           4600 + (replayProgress * 100).floor(), &quot;Events werden abgespielt&quot;);
     } else {
-      acceptWs(ws, es, info);
+      new WebSocketConnection(ws, es, info);
     }
   }
 

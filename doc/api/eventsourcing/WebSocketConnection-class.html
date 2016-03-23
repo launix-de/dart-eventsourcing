@@ -89,7 +89,6 @@
     
     
       <li class="section-title"><a href="eventsourcing/eventsourcing-library.html#functions">Functions</a></li>
-      <li><a href="eventsourcing/acceptWs.html">acceptWs</a></li>
       <li><a href="eventsourcing/aggregate.html">aggregate</a></li>
       <li><a href="eventsourcing/combineEventProviders.html">combineEventProviders</a></li>
       <li><a href="eventsourcing/combineQueryProviders.html">combineQueryProviders</a></li>
@@ -125,6 +124,22 @@
 
   <div class="col-xs-12 col-sm-9 col-md-8 main-content">
 
+    <section class="desc markdown">
+      <p>Kapselt eine WebSocket-Verbindung. Über die Verbindung können
+Kommandos und Anfragen an den Server gestellt werden.</p>
+<h2>Legacy-Protokoll (JSON)</h2>
+<p>Nach dem Format <code>{"action": "...", "track": xxx}</code>
+Nach Verbindungsaufbau zum Server ist eine Verbindung zunächst nicht authentifiziert.
+Das erste Paket vom Client muss ein "username"- und "password"-Feld enthalten,
+woraufhin der Server die Logindaten mit einem <a href="eventsourcing/Authenticator.html">Authenticator</a> prüft. Daraufhin
+wird die Verbindung als aufgebaut betrachtet bzw. terminiert.
+Anschließend können Anfragen (<code>{"action": "get", "track": xxx}</code>) und Kommandos (<code>{"action": "push", "track": xxx}</code>)
+gestellt werden, wobei eine <code>track</code>-Nummer mitgesendet werden muss. Diese schickt
+der Server bei der Antwort mit, daher können mehrere Anfragen asynchron gestellt werden.
+Im Fehlerfall antwortet der Server immer mit (<code>{"error": "...", "track": xxx}</code>).
+Mit der Aktion (<code>{"action": "subscribe", "track": xxx}</code>) wird eine neue
+<a href="eventsourcing/Subscription-class.html">Subscription</a> erstellt.</p>
+    </section>
     
 
 
@@ -138,7 +153,8 @@
           <span class="name"><a href="eventsourcing/WebSocketConnection/WebSocketConnection.html">WebSocketConnection</a></span><span class="signature">(<span class="parameter" id="-param-ws"><span class="type-annotation">WebSocket</span> <span class="parameter-name">ws</span></span>, <span class="parameter" id="-param-router"><span class="type-annotation"><a href="eventsourcing/EventRouter-class.html">EventRouter</a></span> <span class="parameter-name">router</span></span>, <span class="parameter" id="-param-info"><span class="type-annotation">HttpConnectionInfo</span> <span class="parameter-name">info</span></span>)</span>
         </dt>
         <dd>
-          <p></p>
+          <p>Initialisiert eine neue WebSocket-Verbindung mit einem bereits geöffneten
+WebSocket.</p>
         </dd>
       </dl>
     </section>
@@ -163,7 +179,7 @@
           <span class="signature">&#8594; HttpConnectionInfo</span>
         </dt>
         <dd>
-          <p></p>
+          <p>Information über den verbindenen Client (Netzwerkadresse etc)</p>
           <div class="features">
     read-only
   </div>
@@ -173,7 +189,7 @@
           <span class="signature">&#8594; <a href="eventsourcing/EventRouter-class.html">EventRouter</a></span>
         </dt>
         <dd>
-          <p></p>
+          <p>Zugehöriges eventsourcing-System. Eine <a href="eventsourcing/WebSocketConnection-class.html">WebSocketConnection</a> gehört immer zu genau einem System.</p>
           <div class="features">
     read-only
   </div>
@@ -193,7 +209,7 @@
           <span class="signature">&#8594; <a href="eventsourcing/WebSocketState-class.html">WebSocketState</a></span>
         </dt>
         <dd>
-          <p></p>
+          <p>Verbindungszustand (siehe Protokollbeschreibung)</p>
           <div class="features">
     read / write
   </div>
@@ -203,7 +219,7 @@
           <span class="signature">&#8594; Map&lt;int, <a href="eventsourcing/Subscription-class.html">Subscription</a>&gt;</span>
         </dt>
         <dd>
-          <p></p>
+          <p>Offene Abos. Zuordnung erfolgt über die jeweils mitgeschickte <code>trackId</code>.</p>
           <div class="features">
     read-only
   </div>
@@ -213,7 +229,7 @@
           <span class="signature">&#8594; int</span>
         </dt>
         <dd>
-          <p></p>
+          <p>UserID des Benutzers. Erst gültig nach Authentifizierung.</p>
           <div class="features">
     read / write
   </div>
@@ -223,7 +239,7 @@
           <span class="signature">&#8594; String</span>
         </dt>
         <dd>
-          <p></p>
+          <p>Benutzername des Benutzers. Erst gültig nach Authentifizierung.</p>
           <div class="features">
     read / write
   </div>
@@ -233,7 +249,8 @@
           <span class="signature">&#8594; WebSocket</span>
         </dt>
         <dd>
-          <p></p>
+          <p>Zugehöriger Raw-Socket
+TODO: Kapseln</p>
           <div class="features">
     read-only
   </div>
@@ -276,7 +293,9 @@
           </span>
         </dt>
         <dd>
-          <p></p>
+          <p>Bearbeitet die erste Anfrage, die die Anmeldedaten enthalten muss. Im Fehlerfall
+wird die Verbindung sofort abgebrochen (WS-Fehlercode 4401) und der Future
+mit einem Fehler beendet.</p>
         </dd>
         <dt id="onClose" class="callable">
           <span class="name"><a href="eventsourcing/WebSocketConnection/onClose.html">onClose</a></span><span class="signature">(<wbr>)
@@ -284,7 +303,8 @@
           </span>
         </dt>
         <dd>
-          <p></p>
+          <p>Entfernt die Verbindung aus dem Router und aktualisiert den Zustand. Der
+eigentliche <code>WebSocket</code> wird nicht geschlossen.</p>
         </dd>
         <dt id="onData" class="callable">
           <span class="name"><a href="eventsourcing/WebSocketConnection/onData.html">onData</a></span><span class="signature">(<wbr><span class="parameter" id="onData-param-rawData"><span class="type-annotation">String</span> <span class="parameter-name">rawData</span></span>)
@@ -292,7 +312,8 @@
           </span>
         </dt>
         <dd>
-          <p></p>
+          <p>Wird nach Empfang eines vollständigen <code>WebSocket</code>-Pakets aufgerufen.
+Fehler werden abgefangen, der zurückgegebene Future hat immer Erfolg.</p>
         </dd>
         <dt id="toString" class="callable inherited">
           <span class="name"><a href="eventsourcing/WebSocketConnection/toString.html">toString</a></span><span class="signature">(<wbr>)
