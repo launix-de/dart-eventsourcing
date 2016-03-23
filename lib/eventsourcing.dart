@@ -27,3 +27,4 @@ part 'src/sql.dart';
 part 'src/sqlfilter.dart';
 part 'src/ws.dart';
 part 'src/authenticate.dart';
+part 'src/subscription.dart';
