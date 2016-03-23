@@ -1,13 +1,34 @@
 part of eventsourcing;
 
+/// Status einer WebSocket-Verbindung
 enum WebSocketState { UNAUTHENTICATED, OK, CLOSED }
 
+/**
+ * Eine Subscription ist ein Abonnement einer bestimmten Anfrage (Aktion "subscribe" statt "query"
+ * mit ansonsten identischen Parametern). Der Server antwortet zunächst wie auf die entsprechende "query"-Anfrage.
+ * Anschließend prüft er bei jedem eingehenden Kommando (Aktion "push") und bei sonstigen
+ * Zustandsänderungen des Systems, ob sich die angefragten Daten geändert haben.
+ * In diesem Fall wird die aktualisierte Antwort geschickt. Die Subscription kann
+ * jederzeit durch den Client mit der Aktion "unsubscribe" gelöst werden.
+ */
 class Subscription {
+  /// Eine Subscription gehört immer zu genau einer WebSocket-Verbindung
   final WebSocketConnection conn;
+
+  /// Vom Client ursprünglich gestellte Anfrage
   final Map querydata;
+
+  /// Tracking-Nummer (JSON-Parameter "track"), die der Client bei der Anfrage mitgeschickt hat.
+  /// Die Zuordnung der Subscription (in Bezug auf Kündigung und Antwort) erfolgt durch diese Nummer.
   final int trackId;
+
+  /// Zuletzt geschickte Antwort, zum Abgleich bei Eingang eines neuen Kommandos
+  /// TODO: CRC-Prüfsumme benutzen, statt ganze Antwort zu speichern (https://pub.dartlang.org/packages/crc32)
   Map lastResponse = {};
 
+  /// Wird bei Eingang eines neuen Kommandos am Server aufgerufen (nachdem das Kommando
+  /// erfolgreich ausgeführt wurde). Führt die Anfrage an der Datenbank erneut aus
+  /// und schickt ggf. eine neue Antwort an den Client.
   Future update() async {
     final Map result = await conn.router.submitQuery(querydata, conn.user);
     result["track"] = trackId;
@@ -18,11 +39,13 @@ class Subscription {
     }
   }
 
+  /// Löst die Subscription
   void remove() {
     conn.subscriptions.remove(trackId);
     print("${conn.username} entfernt Subscription auf ${querydata['action']}");
   }
 
+  /// Erstellt eine neue Subscription und schickt die erste Antwort
   Subscription(this.conn, this.querydata, this.trackId) {
     print(
         "Neue Subscription von ${conn.username}: ${querydata['action']}, TrackId $trackId");
@@ -30,15 +53,49 @@ class Subscription {
   }
 }
 
+/**
+ * Kapselt eine WebSocket-Verbindung. Über die Verbindung können
+ * Kommandos und Anfragen an den Server gestellt werden.
+ *
+ * ## Legacy-Protokoll (JSON)
+ * Nach dem Format `{"action": "...", "track": xxx}`
+ * Nach Verbindungsaufbau zum Server ist eine Verbindung zunächst nicht authentifiziert.
+ * Das erste Paket vom Client muss ein "username"- und "password"-Feld enthalten,
+ * woraufhin der Server die Logindaten mit einem [Authenticator] prüft. Daraufhin
+ * wird die Verbindung als aufgebaut betrachtet bzw. terminiert.
+ * Anschließend können Anfragen (`{"action": "get", "track": xxx}`) und Kommandos (`{"action": "push", "track": xxx}`)
+ * gestellt werden, wobei eine `track`-Nummer mitgesendet werden muss. Diese schickt
+ * der Server bei der Antwort mit, daher können mehrere Anfragen asynchron gestellt werden.
+ * Im Fehlerfall antwortet der Server immer mit (`{"error": "...", "track": xxx}`).
+ * Mit der Aktion (`{"action": "subscribe", "track": xxx}`) wird eine neue
+ * [Subscription] erstellt.
+ */
 class WebSocketConnection {
+  /// Zugehöriger Raw-Socket
+  /// TODO: Kapseln
   final WebSocket ws;
+
+  /// Zugehöriges eventsourcing-System. Eine [WebSocketConnection] gehört immer zu genau einem System.
   final EventRouter router;
+
+  /// Verbindungszustand (siehe Protokollbeschreibung)
   WebSocketState state = WebSocketState.UNAUTHENTICATED;
+
+  /// Information über den verbindenen Client (Netzwerkadresse etc)
   final HttpConnectionInfo info;
+
+  /// UserID des Benutzers. Erst gültig nach Authentifizierung.
   int user = 0;
+
+  /// Benutzername des Benutzers. Erst gültig nach Authentifizierung.
   String username = "";
+
+  /// Offene Abos. Zuordnung erfolgt über die jeweils mitgeschickte `trackId`.
   final Map<int, Subscription> subscriptions = {};
 
+  /// Bearbeitet die erste Anfrage, die die Anmeldedaten enthalten muss. Im Fehlerfall
+  /// wird die Verbindung sofort abgebrochen (WS-Fehlercode 4401) und der Future
+  /// mit einem Fehler beendet.
   Future onAuthRequest(final Map data) async {
     final String nusername = data["username"];
     final String password = data["password"];
@@ -58,6 +115,8 @@ class WebSocketConnection {
     print("$username an ${info.remoteAddress.host} angemeldet");
   }
 
+  /// Wird nach Empfang eines vollständigen [WebSocket]-Pakets aufgerufen.
+  /// Fehler werden abgefangen, der zurückgegebene Future hat immer Erfolg.
   Future onData(final String rawData) async {
     try {
       final Map data = JSON.decode(rawData);
@@ -123,12 +182,16 @@ class WebSocketConnection {
     }
   }
 
+  /// Entfernt die Verbindung aus dem Router und aktualisiert den Zustand. Der
+  /// eigentliche [WebSocket] wird nicht geschlossen.
   void onClose() {
     state = WebSocketState.CLOSED;
     router.connections.remove(this);
     print("WS-Verbindung zu ${info.remoteAddress.host} verloren!");
   }
 
+  /// Initialisiert eine neue WebSocket-Verbindung mit einem bereits geöffneten
+  /// WebSocket.
   WebSocketConnection(this.ws, this.router, this.info) {
     ws.listen((dat) {
       onData(dat);
@@ -145,8 +208,4 @@ class WebSocketConnection {
       }
     });
   }
-}
-
-void acceptWs(WebSocket w, EventRouter router, HttpConnectionInfo info) {
-  new WebSocketConnection(w, router, info);
 }
