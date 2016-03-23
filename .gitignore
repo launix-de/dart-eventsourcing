@@ -1,0 +1,6 @@
+.atom
+.packages
+packages
+pubspec.lock
+.pub
+test/packages

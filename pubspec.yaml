@@ -1,0 +1,8 @@
+name: eventsourcing
+version: 0.1.0
+dependencies:
+    sqljocky: ^0.14.1
+    http_server: any
+    path: any
+    test: any
+    collection: ^1.4.0
