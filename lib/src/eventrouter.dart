@@ -6,7 +6,7 @@ part of eventsourcing;
  *  und einen Webserver mit speziellem WebSocket-Protokoll (siehe [WebSocketClient])
  *  sowie Auslieferung von statischen Dateien in "html".
  *  Bei Start wird die aktuelle EventQueue in [eventFile] in eine neue Datei in
- *  [backupDirectory] gesichert.
+ *  [backupDirectory] gesichert. Zum Aufbau des Dateiformats siehe [readEventFile].
  *  */
 class EventRouter {
   /// Pool an SQL-Verbindungen (Standardmaximum 50)
@@ -223,7 +223,7 @@ class EventRouter {
         ws.close(
             4600 + (replayProgress * 100).floor(), "Events werden abgespielt");
       } else {
-        acceptWs(ws, es, info);
+        new WebSocketConnection(ws, es, info);
       }
     }
 
