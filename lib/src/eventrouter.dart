@@ -29,17 +29,25 @@ class EventRouter {
 
   int _eventCount = 0;
 
+  /// Authenticator used to check user credentials
   final Authenticator authenticator;
 
+  /// Active web socket connections
   final List<WebSocketConnection> connections = [];
 
-  /// Sink für die Events
+  /// Eventfile sink
   EventFileWriter _eventQueueSink = null;
 
-  /// Werden zusätzlich ausgeführt, wenn *neue* Events eingehen
+  /// Additional handlers to be executed for each *new* incoming event (not replayed ones)
   final List<EventHandler> pushHooks = [];
 
-  /// Sichert die aktuelle EventQueue in [eventFile] in eine neue Datei in [backupDirectory] ("events_milliSecondsSinceEpoch.dat")
+  /// Handlers that handle incoming http requests, defined by path prefix
+  final Map<String, HttpHandler> httpHandler;
+
+  /// Handlers that handle incoming websocket requests, defined by action parameter
+  final Map<String, WebsocketHandler> wsHandler;
+
+  /// Saves the current EventQueue in [eventFile] in a new gzipped file in [backupDirectory] ("events_milliSecondsSinceEpoch.dat")
   Future backupEvents() async {
     final File tempEventFile = new File(backupDirectory.path + "/tmp.dat");
     await tempEventFile.create(recursive: true);
@@ -59,9 +67,6 @@ class EventRouter {
    * definieren.
    * */
   Future replayEvent(Map e) async {
-    assert(e.containsKey("action") &&
-        e.containsKey("id") &&
-        e.containsKey("timestamp"));
     if (e.containsKey("id") && e["id"] >= _biggestKnownEventId)
       _biggestKnownEventId = e["id"];
 
@@ -99,7 +104,7 @@ class EventRouter {
    * */
   Future<Map> submitQuery(Map q, int user) async {
     if (!queryHandler.containsKey(q["action"]))
-      throw new Exception("Keine Verarbeitung für ${q["action"]} hinterlegt");
+      throw "Keine Verarbeitung für ${q["action"]} hinterlegt";
 
     final List<QueryHandler> handlers = queryHandler[q["action"]];
     final Map finalOutput = {};
@@ -174,17 +179,23 @@ class EventRouter {
 
       return {"id": finalInput["id"]};
     } catch (e) {
-      print("Eventerror: $e");
       await trans.rollback();
+      print("Eventerror: $e");
       return {"error": e.toString()};
     }
   }
 
-  EventRouter._EventRouter(this.eventHandler, this.queryHandler, this.eventFile,
-      this.backupDirectory, this.authenticator)
+  EventRouter._EventRouter(
+      this.httpHandler,
+      this.wsHandler,
+      this.eventHandler,
+      this.queryHandler,
+      this.eventFile,
+      this.backupDirectory,
+      this.authenticator)
       : db = new ConnectionPool(
             host: 'localhost',
-            port: 3306,
+            port: 3307,
             user: 'event',
             password: 'event',
             db: 'event',
@@ -194,13 +205,16 @@ class EventRouter {
    * Erstellt einen neuen [EventRouter] mit den angegeben [EventHandler]n und
    * [QueryHandler]n.
    * */
-  static Future<EventRouter> create(eventHandler, queryHandler,
+  static Future<EventRouter> create(
+      httpHandlers, wsHandlers, eventHandler, queryHandler,
       {String eventFilePath: 'data/events.dat',
       String backupPath: 'data/backup',
       String databaseSchemaPath: 'lib/schema.sql',
       Authenticator authenticator}) async {
     // Instanz anlegen
     final EventRouter es = new EventRouter._EventRouter(
+        httpHandlers,
+        wsHandlers,
         eventHandler,
         queryHandler,
         new File(eventFilePath),
@@ -228,10 +242,6 @@ class EventRouter {
       }
     }
 
-    //shelfrouter
-    //  ..get('/wsapi', wsHandler)
-    //  ..add('/', ['GET'], frontendHandler, exactMatch: false); */
-
     final staticFiles = new VirtualDirectory("html")..jailRoot = true;
     staticFiles.directoryHandler = (dir, request) {
       final indexUri = new Uri.file(dir.path).resolve('index.html');
@@ -241,23 +251,41 @@ class EventRouter {
     server.forEach((HttpRequest req) async {
       try {
         String path = req.uri.path;
+        final String pathWithoutSlash =
+            path.startsWith("/") ? path.substring(1) : path;
 
         if (path.startsWith("/wsapi")) {
           final WebSocket ws = await WebSocketTransformer.upgrade(req);
           handleWs(ws, req.connectionInfo);
         } else {
+          // Check if there is a http handler registered
+          for (String prefix in es.httpHandler.keys) {
+            if (pathWithoutSlash.startsWith(prefix)) {
+              await es.httpHandler[prefix](es, req);
+              return;
+            }
+          }
+
           // Static file
           if (path == "/" || path.isEmpty) path = "/index.html";
           path = path.replaceAll("..", "");
           staticFiles.serveFile(
               new File(Path.join("html", path.substring(1))), req);
         }
-      } catch (e) {
+      } catch (e, st) {
         print(
-            "Verarbeitungsfehler bei HTTP-Request von ${req.connectionInfo.remoteAddress.host}");
+            "Error handling HTTP-Request from ${req.connectionInfo.remoteAddress.host}: $e");
+        print(st);
         try {
-          req.response.statusCode = 500;
-          req.response.close();
+          req.response
+            ..headers.contentType = ContentType.JSON
+            ..statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        } catch (e) {}
+
+        try {
+          req.response
+            ..write(JSON.encode({"error": e}))
+            ..close();
         } catch (e) {}
       }
     });
@@ -284,6 +312,7 @@ class EventRouter {
 
     replayProgress = 1.0;
     print("Events erfolgreich eingespielt.");
+    es._biggestKnownEventId = 1000000;
 
     es._eventQueueSink = new EventFileWriter(new File(eventFilePath));
 

@@ -6,6 +6,15 @@ typedef Future EventHandler(Map event, Transaction trans);
 typedef Future<Map> QueryHandler(Map query, ConnectionPool pool);
 typedef Future<Map> ResultHandler(Results results);
 
+typedef Future HttpHandler(EventRouter router, HttpRequest request);
+
+typedef Map<String, List<HttpHandler>> HttpHandlerProvider();
+
+typedef Future WebsocketHandler(
+    EventRouter router, WebSocketConnection connection);
+
+typedef Map<String, List<WebsocketHandler>> WebSocketHandlerProvider();
+
 /// Stellt benannte Queries zur Verfügung
 typedef Map<String, List<QueryHandler>> QueryProvider();
 
