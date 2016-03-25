@@ -291,7 +291,7 @@ class EventRouter {
     });
 
     // Datenbank zurücksetzen (falls noch was drin ist)
-    await resetDatabase(new File(databaseSchemaPath), es.db);
+    // await resetDatabase(new File(databaseSchemaPath), es.db);
     await backupFuture;
 
     int startTime = 0;
@@ -303,7 +303,7 @@ class EventRouter {
         startTime = m["timestamp"];
       }
 
-      await es.replayEvent(m);
+      // await es.replayEvent(m);
 
       if (m.containsKey("timestamp")) {
         replayProgress = (m["timestamp"] - startTime) / (endTime - startTime);
