@@ -125,26 +125,27 @@ class EventRouter {
     return finalOutput;
   }
 
+  int getNewEventId() => ++_biggestKnownEventId;
+
   /**
    * Spielt ein Event neu ab. Die EventHandler werden alle *nacheinander* in *einer* Transaktion ausgeführt.
    * Wirft einer der [EventHandler] eine Exception, wird ein Rollback ausgeführt und eine Map mit {"error": "msg"}
    * zurückgegeben.
-   * Unbekannte Events lösen eine Exception aus. Jedes Event sollte die Felder "action", "id" und "timestamp"
-   * definieren.
-   * TODO: Die Events dürfen ja eigentlich auch parallel ausgeführt werden, da sie voneinander unabhängig sind
+   * Unbekannte Events lösen eine Exception aus. Jedes Event sollte das Feld "action" definieren.
+   * **NOTE**: This method does not check auth.
    * */
   Future<Map> submitEvent(Map e, Map hookData, int user) async {
     if (!eventHandler.containsKey(e["action"]))
-      throw new Exception("Keine Verarbeitung für ${e["action"]} hinterlegt");
+      throw new Exception("No event handlers defined for ${e["action"]}");
 
     final List<EventHandler> handlers = eventHandler[e["action"]];
     final Map finalInput = {
       "timestamp": new DateTime.now().millisecondsSinceEpoch,
-      "id": ++_biggestKnownEventId,
+      "id": getNewEventId(),
       "user": user
     };
     e.addAll(finalInput);
-    final Transaction trans = await db.startTransaction();
+    final Transaction trans = await db.startTransaction(consistent: true);
 
     try {
       for (EventHandler h in handlers) {
