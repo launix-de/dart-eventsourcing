@@ -125,6 +125,14 @@ class WebSocketConnection {
           if (subscriptions.containsKey(unsubtrack))
             subscriptions[unsubtrack].remove();
           break;
+
+        default:
+          // Check if there is an action handler defined in router
+          if(router.wsHandler.containsKey(type)){
+            await router.wsHandler[type](router, this);            
+          } else {
+            throw "Unknown action $type";
+          }
       }
     } catch (e) {
       // TODO: Mehr Handling
