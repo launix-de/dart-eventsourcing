@@ -29,3 +29,4 @@ part 'src/sqlfilter.dart';
 part 'src/ws.dart';
 part 'src/authenticate.dart';
 part 'src/subscription.dart';
+part 'src/upload.dart';
