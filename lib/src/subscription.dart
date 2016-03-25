@@ -20,8 +20,7 @@ class Subscription {
   final int trackId;
 
   /// Zuletzt geschickte Antwort, zum Abgleich bei Eingang eines neuen Kommandos
-  /// TODO: CRC-Prüfsumme benutzen, statt ganze Antwort zu speichern (https://pub.dartlang.org/packages/crc32)
-  Map lastResponse = {};
+  int _lastResponseChecksum = -1;
 
   /// Wird bei Eingang eines neuen Kommandos am Server aufgerufen (nachdem das Kommando
   /// erfolgreich ausgeführt wurde). Führt die Anfrage an der Datenbank erneut aus
@@ -29,10 +28,12 @@ class Subscription {
   Future update() async {
     final Map result = await conn.router.submitQuery(querydata, conn.user);
     result["track"] = trackId;
+    final String resultJSON = JSON.encode(result);
 
-    if (!(const DeepCollectionEquality().equals(result, lastResponse))) {
-      conn.ws.add(JSON.encode(result));
-      lastResponse = result;
+    final int checksum = CRC32.compute(resultJSON);
+    if (checksum != _lastResponseChecksum) {
+      conn.ws.add(resultJSON);
+      _lastResponseChecksum = checksum;
     }
   }
 

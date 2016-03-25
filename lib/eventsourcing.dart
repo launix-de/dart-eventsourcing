@@ -8,14 +8,15 @@
 
 library eventsourcing;
 
-import "package:sqljocky/sqljocky.dart";
 import "dart:async";
 import "dart:typed_data";
 import "dart:convert";
 import "dart:io";
+import "package:sqljocky/sqljocky.dart";
 import 'package:http_server/http_server.dart';
 import 'package:path/path.dart' as Path;
-import "package:collection/collection.dart";
+import 'package:crc32/crc32.dart';
+import 'package:mime/mime.dart';
 
 part 'src/aggregator.dart';
 part 'src/eventrouter.dart';

@@ -5,4 +5,5 @@ dependencies:
     http_server: any
     path: any
     test: any
-    collection: ^1.4.0
+    crc32: ^0.1.6
+    mime: ^0.9.3
