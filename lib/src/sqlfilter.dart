@@ -222,7 +222,7 @@ QueryHandler filterQuery(String viewName) {
 
     final List<Map> result = (await prepareSQLList(query)({}, db))["result"];
 
-    data["rowCount"] = rowCount;
+    data["count"] = rowCount;
     data["result"] = result;
 
     return data;
