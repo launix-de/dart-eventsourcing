@@ -47,6 +47,9 @@ class EventRouter {
   /// Handlers that handle incoming websocket requests, defined by action parameter
   final Map<String, WebsocketHandler> wsHandler;
 
+  final EventHandler logActionQuery = prepareSQL(
+      "INSERT INTO eventsourcing_actions(eventid, user, timestamp, parameters, action, type, source, result, track, success) VALUES(::eventid::, ::user::, ::timestamp::, ::parameters::, ::action::, ::type::, ::source::, ::result::, ::track::, ::success::)");
+
   /// Saves the current EventQueue in [eventFile] in a new gzipped file in [backupDirectory] ("events_milliSecondsSinceEpoch.dat")
   Future backupEvents() async {
     final File tempEventFile = new File(backupDirectory.path + "/tmp.dat");
@@ -57,6 +60,29 @@ class EventRouter {
     await eventsFile.transform(GZIP.encoder).pipe(tmpFile);
     await tempEventFile.rename(backupDirectory.path +
         "/events_${new DateTime.now().millisecondsSinceEpoch}.dat");
+  }
+
+  Future logAction({int eventid: 0, int user: 0, int timestamp: -1, String parameters, String action, String type, String source, String result, bool success, int track: 0}) async {
+      final logTransaction = await db.startTransaction();
+
+      try {
+        await logActionQuery({
+          "eventid": eventid,
+          "user": user,
+          "timestamp": timestamp == -1 ? new DateTime.now().millisecondsSinceEpoch : timestamp,
+          "parameters": parameters,
+          "action": action,
+          "type": type,
+          "source": source,
+          "result": result,
+          "success": success ? 1 : 0,
+          "track": track
+        }, logTransaction);
+        await logTransaction.commit();
+      } catch (e) {
+        print("Log error: $e");
+        await logTransaction.rollback();
+      }
   }
 
   /**
@@ -75,6 +101,7 @@ class EventRouter {
 
     final List<EventHandler> handlers = eventHandler[e["action"]];
     final Transaction trans = await db.startTransaction();
+    final List<String> errors = [];
 
     try {
       for (EventHandler h in handlers) {
@@ -83,12 +110,22 @@ class EventRouter {
         try {
           await h(ep, trans);
         } catch (err) {
+          errors.add(err);
+
           // Beim Abspielen der Events Fehler ignorieren
           print(
               "$_eventCount Events verarbeitet; Eventfehler bei ${new DateTime.fromMillisecondsSinceEpoch(e["timestamp"])} von ${e.containsKey("user") ? e["user"] : "Unbekannt"}, ${e["action"]}: $err");
         }
       }
       await trans.commit();
+
+      if(errors.isEmpty){
+        logAction(eventid: e.containsKey("id") ? e["id"] : 0, user: e.containsKey("user") ? e["user"] : 0, parameters: JSON.encode(e),
+        action: e.containsKey("action") ? e["action"] : "", type: "push", source: "replay", result: "", success: true);
+      } else {
+        logAction(eventid: e.containsKey("id") ? e["id"] : 0, user: e.containsKey("user") ? e["user"] : 0, parameters: JSON.encode(e),
+          action: e.containsKey("action") ? e["action"] : "", type: "push", source: "replay", result: JSON.encode({"error": errors}), success: false);
+      }
     } catch (e) {
       await trans.rollback();
       rethrow;
@@ -262,6 +299,7 @@ class EventRouter {
           for (String prefix in es.httpHandler.keys) {
             if (pathWithoutSlash.startsWith(prefix)) {
               await es.httpHandler[prefix](es, req);
+
               return;
             }
           }

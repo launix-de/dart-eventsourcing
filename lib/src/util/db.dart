@@ -61,6 +61,43 @@ Future resetDatabase(File schemaFile, ConnectionPool db) async {
       if (s.trim().isNotEmpty) await db.query(s.replaceAll("::", ";"));
     }
 
+    // Create meta tables
+    await trans.query("""CREATE TABLE `eventsourcing_actions` (
+      `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+      `eventid` BIGINT(20) NOT NULL,
+      `user` BIGINT(20) NOT NULL,
+      `timestamp` BIGINT(20) NOT NULL,
+      `parameters` TEXT NOT NULL,
+      `action` VARCHAR(30) NOT NULL,
+      `type` VARCHAR(20) NOT NULL,
+      `source` VARCHAR(10) NOT NULL,
+      `result` TEXT NOT NULL,
+      `track` BIGINT(20) NOT NULL,
+      `success` TINYINT(1) NOT NULL,
+      PRIMARY KEY (`id`))
+    ENGINE = MyISAM;
+    """);
+
+    await trans.query("""CREATE
+     ALGORITHM = UNDEFINED
+     VIEW `eventsourcing_actionsListe`
+     AS SELECT e.id AS ID, e.eventid AS eventid, e.user AS user, e.timestamp AS timestamp,
+        e.parameters AS parameters, e.action AS action, e.type AS type, e.source AS source,
+        e.result AS result, e.track AS track, e.success AS success,
+        u.Username AS username, isAdmin AS isAdmin, isQS AS isQS,
+        IF(success=0, 'rgb(255,69,0)', IF(isAdmin=1, 'rgb(0,191,255)', 'rgb(255,255,255)')) AS color,
+        IF(type="subscribe", (SELECT e2.timestamp FROM eventsourcing_actions e2 WHERE e2.type="unsubscribe" AND e2.track=e.track AND e2.timestamp>=e.timestamp ORDER BY e2.timestamp LIMIT 1), 0) AS unsubscribetimestamp
+        FROM eventsourcing_actions e, Users u WHERE e.type!="unsubscribe" AND u.ID=e.user
+        ORDER BY timestamp DESC""");
+
+    await trans
+        .query("""CREATE TRIGGER ins_log AFTER INSERT ON eventsourcing_actions
+    FOR EACH ROW BEGIN
+    	IF (SELECT count(*) FROM eventsourcing_actions) > 1000 THEN
+            		DELETE FROM eventsourcing_actions ORDER BY timestamp LIMIT 1;
+    	END IF;
+    END""");
+
     await trans.commit();
     print("Neues Schema erfolgreich eingespielt.");
   } catch (e) {

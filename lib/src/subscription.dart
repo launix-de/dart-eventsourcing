@@ -34,6 +34,19 @@ class Subscription {
     if (checksum != _lastResponseChecksum) {
       conn.ws.add(resultJSON);
       _lastResponseChecksum = checksum;
+
+      // Loggen
+      if (querydata["action"] != "eventsourcing_actions") {
+        conn.router.logAction(
+            eventid: 0,
+            user: conn.user,
+            parameters: JSON.encode(querydata),
+            action: querydata.containsKey("action") ? querydata["action"] : "",
+            type: "subscribeupdate",
+            source: "wsapi",
+            result: resultJSON,
+            success: true);
+      }
     }
   }
 

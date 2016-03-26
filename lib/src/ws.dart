@@ -68,10 +68,15 @@ class WebSocketConnection {
   /// Wird nach Empfang eines vollständigen [WebSocket]-Pakets aufgerufen.
   /// Fehler werden abgefangen, der zurückgegebene Future hat immer Erfolg.
   Future onData(final String rawData) async {
-    try {
-      final Map data = JSON.decode(rawData);
+    Map result = {};
+    int trackId = -1;
+    Map data = {};
+    String type = "";
+    String encodedResult = "";
 
-      int trackId = -1;
+    try {
+      data = JSON.decode(rawData);
+
       if (data.containsKey("track")) {
         trackId = data["track"];
         data.remove("track");
@@ -81,38 +86,24 @@ class WebSocketConnection {
 
       // print(data);
 
-      final String type = data["type"];
+      type = data["type"];
       data.remove("type");
+
+      if (data.containsKey("username")) data.remove("username");
+      if (data.containsKey("password")) data.remove("password");
 
       switch (type) {
         case "get":
-          try {
             final Map res = await router.submitQuery(new Map.from(data), user);
             res["track"] = trackId;
-            ws.add(JSON.encode(res));
-          } catch (e) {
-            print("WS-Queryfehler bei $username, Aktion ${data["action"]}: $e");
-            // print(stacktrace);
-            final Map res = {"error": e, "track": trackId};
-            ws.add(JSON.encode(res));
-          }
+            result = res;
           break;
 
         case "push":
-          try {
-            if (data.containsKey("username")) data.remove("username");
-            if (data.containsKey("password")) data.remove("password");
-
             final Map res = await router.submitEvent(
                 new Map.from(data), {"websocket": this}, user);
             res["track"] = trackId;
-            ws.add(JSON.encode(res));
-          } catch (e, stacktrace) {
-            print("WS-Eventfehler bei $username, Aktion ${data["action"]}: $e");
-            print(stacktrace);
-            final Map res = {"error": e, "track": trackId};
-            ws.add(JSON.encode(res));
-          }
+            result = res;
           break;
 
         case "subscribe":
@@ -122,21 +113,37 @@ class WebSocketConnection {
 
         case "unsubscribe":
           final int unsubtrack = data["unsubtrack"];
+          trackId = unsubtrack;
           if (subscriptions.containsKey(unsubtrack))
             subscriptions[unsubtrack].remove();
           break;
 
         default:
           // Check if there is an action handler defined in router
-          if(router.wsHandler.containsKey(type)){
-            await router.wsHandler[type](router, this);            
+          if (router.wsHandler.containsKey(type)) {
+            await router.wsHandler[type](router, this);
           } else {
             throw "Unknown action $type";
           }
       }
+
+      encodedResult = JSON.encode(result);
+      ws.add(encodedResult);
+
+      // Aktion als Erfolg loggen
+      router.logAction(eventid: result.containsKey("id") ? result["id"] : 0, user: user, parameters: JSON.encode(data),
+        action: data.containsKey("action") ? data["action"] : "", type: type, source: "wsapi", result: encodedResult, success: true, track: trackId);
     } catch (e) {
-      // TODO: Mehr Handling
-      print("WS-Fehler: $e.");
+      result = {"error": e, "track": trackId};
+      encodedResult = JSON.encode(result);
+
+      ws.add(encodedResult);
+
+      print("WS-Fehler bei $username: $e.");
+
+      // Aktion als Fehler loggen
+      router.logAction(eventid: result.containsKey("id") ? result["id"] : 0, user: user, parameters: JSON.encode(data),
+        action: data.containsKey("action") ? data["action"] : "", type: type, source: "wsapi", result: encodedResult, success: false, track: trackId);
     }
   }
 
