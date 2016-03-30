@@ -9,8 +9,9 @@ QueryHandler aggregate(String arrayName, String primaryKey,
 
     for (Map originalItem in originalItems) {
       final int key = originalItem[primaryKey];
-      final Map item =
-          itemsInt.containsKey(key) ? itemsInt[key] : {subArrayPrefix: []};
+      final Map item = itemsInt.containsKey(key)
+          ? itemsInt[key]
+          : {subArrayPrefix: [], primaryKey: key};
       final List<Map> subItems = item[subArrayPrefix];
       final Map newSubItem = {};
 
