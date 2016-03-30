@@ -44,8 +44,8 @@ class EventRouter {
   /// Handlers that handle incoming http requests, defined by path prefix
   final Map<String, HttpHandler> httpHandler;
 
-  /// Handlers that handle incoming websocket requests, defined by action parameter
-  final Map<String, WebsocketHandler> wsHandler;
+  /// Handlers that handle incoming websocket requests
+  final List<Provider<WebSocketConnection>> webSocketProviders = [];
 
   final EventHandler logActionQuery = prepareSQL(
       "INSERT INTO eventsourcing_actions(eventid, user, timestamp, parameters, action, type, source, result, track, success) VALUES(::eventid::, ::user::, ::timestamp::, ::parameters::, ::action::, ::type::, ::source::, ::result::, ::track::, ::success::)");
@@ -62,27 +62,39 @@ class EventRouter {
         "/events_${new DateTime.now().millisecondsSinceEpoch}.dat");
   }
 
-  Future logAction({int eventid: 0, int user: 0, int timestamp: -1, String parameters, String action, String type, String source, String result, bool success, int track: 0}) async {
-      final logTransaction = await db.startTransaction();
+  Future logAction(
+      {int eventid: 0,
+      int user: 0,
+      int timestamp: -1,
+      String parameters,
+      String action,
+      String type,
+      String source,
+      String result,
+      bool success,
+      int track: 0}) async {
+    final logTransaction = await db.startTransaction();
 
-      try {
-        await logActionQuery({
-          "eventid": eventid,
-          "user": user,
-          "timestamp": timestamp == -1 ? new DateTime.now().millisecondsSinceEpoch : timestamp,
-          "parameters": parameters,
-          "action": action,
-          "type": type,
-          "source": source,
-          "result": result,
-          "success": success ? 1 : 0,
-          "track": track
-        }, logTransaction);
-        await logTransaction.commit();
-      } catch (e) {
-        print("Log error: $e");
-        await logTransaction.rollback();
-      }
+    try {
+      await logActionQuery({
+        "eventid": eventid,
+        "user": user,
+        "timestamp": timestamp == -1
+            ? new DateTime.now().millisecondsSinceEpoch
+            : timestamp,
+        "parameters": parameters,
+        "action": action,
+        "type": type,
+        "source": source,
+        "result": result,
+        "success": success ? 1 : 0,
+        "track": track
+      }, logTransaction);
+      await logTransaction.commit();
+    } catch (e) {
+      print("Log error: $e");
+      await logTransaction.rollback();
+    }
   }
 
   /**
@@ -119,12 +131,26 @@ class EventRouter {
       }
       await trans.commit();
 
-      if(errors.isEmpty){
-        logAction(eventid: e.containsKey("id") ? e["id"] : 0, user: e.containsKey("user") ? e["user"] : 0, parameters: JSON.encode(e),
-        action: e.containsKey("action") ? e["action"] : "", type: "push", source: "replay", result: "", success: true);
+      if (errors.isEmpty) {
+        logAction(
+            eventid: e.containsKey("id") ? e["id"] : 0,
+            user: e.containsKey("user") ? e["user"] : 0,
+            parameters: JSON.encode(e),
+            action: e.containsKey("action") ? e["action"] : "",
+            type: "push",
+            source: "replay",
+            result: "",
+            success: true);
       } else {
-        logAction(eventid: e.containsKey("id") ? e["id"] : 0, user: e.containsKey("user") ? e["user"] : 0, parameters: JSON.encode(e),
-          action: e.containsKey("action") ? e["action"] : "", type: "push", source: "replay", result: JSON.encode({"error": errors}), success: false);
+        logAction(
+            eventid: e.containsKey("id") ? e["id"] : 0,
+            user: e.containsKey("user") ? e["user"] : 0,
+            parameters: JSON.encode(e),
+            action: e.containsKey("action") ? e["action"] : "",
+            type: "push",
+            source: "replay",
+            result: JSON.encode({"error": errors}),
+            success: false);
       }
     } catch (e) {
       await trans.rollback();
@@ -224,7 +250,6 @@ class EventRouter {
 
   EventRouter._EventRouter(
       this.httpHandler,
-      this.wsHandler,
       this.eventHandler,
       this.queryHandler,
       this.eventFile,
@@ -242,8 +267,7 @@ class EventRouter {
    * Erstellt einen neuen [EventRouter] mit den angegeben [EventHandler]n und
    * [QueryHandler]n.
    * */
-  static Future<EventRouter> create(
-      httpHandlers, wsHandlers, eventHandler, queryHandler,
+  static Future<EventRouter> create(httpHandlers, eventHandler, queryHandler,
       {String eventFilePath: 'data/events.dat',
       String backupPath: 'data/backup',
       String databaseSchemaPath: 'lib/schema.sql',
@@ -251,7 +275,6 @@ class EventRouter {
     // Instanz anlegen
     final EventRouter es = new EventRouter._EventRouter(
         httpHandlers,
-        wsHandlers,
         eventHandler,
         queryHandler,
         new File(eventFilePath),

@@ -10,10 +10,11 @@ typedef Future HttpHandler(EventRouter router, HttpRequest request);
 
 typedef Map<String, List<HttpHandler>> HttpHandlerProvider();
 
-typedef Future WebsocketHandler(
-    EventRouter router, WebSocketConnection connection);
-
-typedef Map<String, List<WebsocketHandler>> WebSocketHandlerProvider();
+abstract class Provider<T> {
+  Future onConnect(T conn);
+  Future onDisconnect(T conn);
+  Future<Map<String, dynamic>> onMessage(T conn, Map request);
+}
 
 /// Stellt benannte Queries zur Verfügung
 typedef Map<String, List<QueryHandler>> QueryProvider();
@@ -35,7 +36,7 @@ Map<String, List<EventHandler>> combineEventProviders(
 
 /// Kombiniert die Events aus mehreren [QueryProvider]n in einer Map
 Map<String, List<QueryHandler>> combineQueryProviders(
-    List<QueryHandler> providers) {
+    List<QueryProvider> providers) {
   final Map<String, List<QueryHandler>> combined = {};
 
   for (QueryProvider p in providers) {

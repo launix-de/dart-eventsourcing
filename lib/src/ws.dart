@@ -1,7 +1,7 @@
 part of eventsourcing;
 
 /// Status einer WebSocket-Verbindung
-enum WebSocketState { UNAUTHENTICATED, OK, CLOSED }
+enum WebSocketState { UNAUTHENTICATED, OK, BACKGROUND, CLOSED }
 
 /**
  * Kapselt eine WebSocket-Verbindung. Über die Verbindung können
@@ -63,6 +63,8 @@ class WebSocketConnection {
     state = WebSocketState.OK;
     username = nusername;
     print("$username an ${info.remoteAddress.host} angemeldet");
+
+    for (var p in router.webSocketProviders) p.onConnect(this);
   }
 
   /// Wird nach Empfang eines vollständigen [WebSocket]-Pakets aufgerufen.
@@ -87,23 +89,22 @@ class WebSocketConnection {
       // print(data);
 
       type = data["type"];
-      data.remove("type");
 
       if (data.containsKey("username")) data.remove("username");
       if (data.containsKey("password")) data.remove("password");
 
       switch (type) {
         case "get":
-            final Map res = await router.submitQuery(new Map.from(data), user);
-            res["track"] = trackId;
-            result = res;
+          final Map res = await router.submitQuery(new Map.from(data), user);
+          res["track"] = trackId;
+          result = res;
           break;
 
         case "push":
-            final Map res = await router.submitEvent(
-                new Map.from(data), {"websocket": this}, user);
-            res["track"] = trackId;
-            result = res;
+          final Map res = await router.submitEvent(
+              new Map.from(data), {"websocket": this}, user);
+          res["track"] = trackId;
+          result = res;
           break;
 
         case "subscribe":
@@ -119,20 +120,33 @@ class WebSocketConnection {
           break;
 
         default:
-          // Check if there is an action handler defined in router
-          if (router.wsHandler.containsKey(type)) {
-            await router.wsHandler[type](router, this);
-          } else {
-            throw "Unknown action $type";
+          // Iterate over providers
+          bool found = false;
+          for (var p in router.webSocketProviders) {
+            final Map pResponse = await p.onMessage(this, data);
+            if (pResponse != null) {
+              result = pResponse;
+              found = true;
+              break;
+            }
           }
+          if (!found) throw "Unknown ws action";
       }
 
       encodedResult = JSON.encode(result);
       ws.add(encodedResult);
 
       // Aktion als Erfolg loggen
-      router.logAction(eventid: result.containsKey("id") ? result["id"] : 0, user: user, parameters: JSON.encode(data),
-        action: data.containsKey("action") ? data["action"] : "", type: type, source: "wsapi", result: encodedResult, success: true, track: trackId);
+      router.logAction(
+          eventid: result.containsKey("id") ? result["id"] : 0,
+          user: user,
+          parameters: JSON.encode(data),
+          action: data.containsKey("action") ? data["action"] : "",
+          type: type,
+          source: "wsapi",
+          result: encodedResult,
+          success: true,
+          track: trackId);
     } catch (e) {
       result = {"error": e, "track": trackId};
       encodedResult = JSON.encode(result);
@@ -142,8 +156,16 @@ class WebSocketConnection {
       print("WS-Fehler bei $username: $e.");
 
       // Aktion als Fehler loggen
-      router.logAction(eventid: result.containsKey("id") ? result["id"] : 0, user: user, parameters: JSON.encode(data),
-        action: data.containsKey("action") ? data["action"] : "", type: type, source: "wsapi", result: encodedResult, success: false, track: trackId);
+      router.logAction(
+          eventid: result.containsKey("id") ? result["id"] : 0,
+          user: user,
+          parameters: JSON.encode(data),
+          action: data.containsKey("action") ? data["action"] : "",
+          type: type,
+          source: "wsapi",
+          result: encodedResult,
+          success: false,
+          track: trackId);
     }
   }
 
@@ -153,6 +175,8 @@ class WebSocketConnection {
     state = WebSocketState.CLOSED;
     router.connections.remove(this);
     print("WS-Verbindung zu ${info.remoteAddress.host} verloren!");
+
+    for (var p in router.webSocketProviders) p.onDisconnect(this);
   }
 
   /// Initialisiert eine neue WebSocket-Verbindung mit einem bereits geöffneten
