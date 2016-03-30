@@ -47,8 +47,12 @@ class EventRouter {
   /// Handlers that handle incoming websocket requests
   final List<Provider<WebSocketConnection>> webSocketProviders = [];
 
-  final EventHandler logActionQuery = prepareSQL(
+  final EventHandler logActionInsertQuery = prepareSQL(
       "INSERT INTO eventsourcing_actions(eventid, user, timestamp, parameters, action, type, source, result, track, success) VALUES(::eventid::, ::user::, ::timestamp::, ::parameters::, ::action::, ::type::, ::source::, ::result::, ::track::, ::success::)");
+
+  final QueryHandler logActionSelectQuery = prepareSQLDetailRenamed("SELECT count(*) FROM eventsourcing_actions", ["count"]);
+
+  final EventHandler logActionRemoveQuery = prepareSQL("DELETE FROM eventsourcing_actions ORDER BY timestamp LIMIT 1");
 
   /// Saves the current EventQueue in [eventFile] in a new gzipped file in [backupDirectory] ("events_milliSecondsSinceEpoch.dat")
   Future backupEvents() async {
@@ -76,7 +80,7 @@ class EventRouter {
     final logTransaction = await db.startTransaction();
 
     try {
-      await logActionQuery({
+      await logActionInsertQuery({
         "eventid": eventid,
         "user": user,
         "timestamp": timestamp == -1
@@ -90,6 +94,11 @@ class EventRouter {
         "success": success ? 1 : 0,
         "track": track
       }, logTransaction);
+
+      if((await logActionSelectQuery({}, db))["count"] > 500){
+        await logActionRemoveQuery({}, logTransaction);
+      }
+
       await logTransaction.commit();
     } catch (e) {
       print("Log error: $e");
@@ -257,7 +266,7 @@ class EventRouter {
       this.authenticator)
       : db = new ConnectionPool(
             host: 'localhost',
-            port: 3307,
+            port: 3306,
             user: 'event',
             password: 'event',
             db: 'event',
@@ -352,7 +361,7 @@ class EventRouter {
     });
 
     // Datenbank zurücksetzen (falls noch was drin ist)
-    // await resetDatabase(new File(databaseSchemaPath), es.db);
+    await resetDatabase(new File(databaseSchemaPath), es.db);
     await backupFuture;
 
     int startTime = 0;
@@ -364,7 +373,7 @@ class EventRouter {
         startTime = m["timestamp"];
       }
 
-      // await es.replayEvent(m);
+      await es.replayEvent(m);
 
       if (m.containsKey("timestamp")) {
         replayProgress = (m["timestamp"] - startTime) / (endTime - startTime);

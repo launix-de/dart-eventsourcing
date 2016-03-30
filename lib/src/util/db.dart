@@ -90,14 +90,6 @@ Future resetDatabase(File schemaFile, ConnectionPool db) async {
         FROM eventsourcing_actions e, Users u WHERE e.type!="unsubscribe" AND u.ID=e.user
         ORDER BY timestamp DESC""");
 
-    await trans
-        .query("""CREATE TRIGGER ins_log AFTER INSERT ON eventsourcing_actions
-    FOR EACH ROW BEGIN
-    	IF (SELECT count(*) FROM eventsourcing_actions) > 1000 THEN
-            		DELETE FROM eventsourcing_actions ORDER BY timestamp LIMIT 1;
-    	END IF;
-    END""");
-
     await trans.commit();
     print("Neues Schema erfolgreich eingespielt.");
   } catch (e) {
