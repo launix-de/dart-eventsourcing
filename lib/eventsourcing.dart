@@ -17,6 +17,7 @@ import 'package:http_server/http_server.dart';
 import 'package:path/path.dart' as Path;
 import 'package:crc32/crc32.dart';
 import 'package:mime/mime.dart';
+import 'package:uuid/uuid.dart';
 
 part 'src/aggregator.dart';
 part 'src/eventrouter.dart';
