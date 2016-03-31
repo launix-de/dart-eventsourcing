@@ -80,7 +80,7 @@ Future resetDatabase(File schemaFile, EventRouter router) async {
 
     await trans.query("""CREATE
      ALGORITHM = UNDEFINED
-     VIEW `eventsourcing_actionsListe`
+     VIEW `eventsourcing_actionsliste`
      AS SELECT e.id AS ID, e.eventid AS eventid, e.user AS user, e.timestamp AS timestamp,
         e.parameters AS parameters, e.action AS action, e.type AS type, e.source AS source,
         e.result AS result, e.track AS track, e.success AS success,
