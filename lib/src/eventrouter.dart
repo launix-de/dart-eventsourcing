@@ -120,7 +120,10 @@ class EventRouter {
 
       await logTransaction.commit();
 
-      updateSubscriptions();
+      // Update subscriptions to eventsourcing_actions
+      updateSubscriptions((s) =>
+          s.querydata.containsKey("action") &&
+          s.querydata["action"].startsWith("eventsourcing_actions"));
     } catch (e) {
       print("Log error: $e");
       await logTransaction.rollback();
@@ -227,12 +230,16 @@ class EventRouter {
 
   int getNewEventId() => ++_biggestKnownEventId;
 
-  Future updateSubscriptions() async {
+  Future updateSubscriptions([bool f(Subscription s)]) async {
     final List<Future> updates = [];
 
     for (WebSocketConnection conn in connections) {
-      for (Subscription sub in conn.subscriptions.values) {
-        updates.add(sub.update());
+      if (f != null) {
+        conn.subscriptions.values
+            .where(f)
+            .forEach((s) => updates.add(s.update()));
+      } else {
+        conn.subscriptions.values.forEach((s) => updates.add(s.update()));
       }
     }
 
