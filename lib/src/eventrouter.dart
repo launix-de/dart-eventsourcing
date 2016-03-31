@@ -12,7 +12,13 @@ class EventRouter {
   final bool skipplayback;
 
   /// Pool an SQL-Verbindungen (Standardmaximum 50)
-  ConnectionPool db;
+  final ConnectionPool db = new ConnectionPool(
+      host: 'mysql',
+      port: 3306,
+      user: 'event',
+      password: 'event',
+      db: 'event',
+      max: 50);
 
   /// EventQueue, in der die verarbeiteten Events gespeichert werden
   final File eventFile;

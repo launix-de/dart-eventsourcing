@@ -31,25 +31,17 @@ Stream<Map<String, dynamic>> resultsToMap(Results r,
 Future resetDatabase(File schemaFile, EventRouter router) async {
   assert(await schemaFile.exists());
 
-  router.db = new ConnectionPool(
-        host: 'mysql',
-        port: 3306,
-        user: 'event',
-        password: 'event',
-        db: 'event',
-        max: 50);
-
   final Iterable<String> sql = (await schemaFile.readAsString()).split(";");
 
-  final Iterable<String> tables =
-      (await (await router.db.query("SHOW FULL TABLES WHERE TABLE_TYPE != 'VIEW'"))
-              .toList())
-          .map((r) => r[0]);
+  final Iterable<String> tables = (await (await router.db
+              .query("SHOW FULL TABLES WHERE TABLE_TYPE != 'VIEW'"))
+          .toList())
+      .map((r) => r[0]);
 
-  final Iterable<String> views =
-      (await (await router.db.query("SHOW FULL TABLES WHERE TABLE_TYPE LIKE 'VIEW'"))
-              .toList())
-          .map((r) => r[0]);
+  final Iterable<String> views = (await (await router.db
+              .query("SHOW FULL TABLES WHERE TABLE_TYPE LIKE 'VIEW'"))
+          .toList())
+      .map((r) => r[0]);
 
   final Transaction trans = await router.db.startTransaction();
 
