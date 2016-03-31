@@ -76,7 +76,8 @@ HttpHandler uploadHandler() {
             await router.submitEvent(uploadEvent, {"httprequest": req}, userId);
         if (response.containsKey("error")) throw response["error"];
 
-        await tmpFile.rename(Path.join("/upload", "${fileId}.dat"));
+        await tmpFile.copy(Path.join("/upload", "${fileId}.dat"));
+        tmpFile.delete();
 
         req.response
           ..headers.contentType = ContentType.JSON
