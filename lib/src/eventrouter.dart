@@ -138,9 +138,6 @@ class EventRouter {
    * definieren.
    * */
   Future replayEvent(Map e) async {
-    if (e.containsKey("id") && e["id"] >= _biggestKnownEventId)
-      _biggestKnownEventId = e["id"];
-
     if (!eventHandler.containsKey(e["action"]))
       throw "Keine Verarbeitung für ${e["action"]} hinterlegt";
 
@@ -407,23 +404,23 @@ class EventRouter {
     int endTime = new DateTime.now().millisecondsSinceEpoch;
 
     // Alte Events einspielen
-    if (!skipplayback) {
-      await for (Map m in readEventFile(new File(eventFilePath))) {
-        if (startTime == 0 && m.containsKey("timestamp")) {
-          startTime = m["timestamp"];
-        }
+    await for (Map m in readEventFile(new File(eventFilePath))) {
+      if (startTime == 0 && m.containsKey("timestamp")) {
+        startTime = m["timestamp"];
+      }
 
-        await es.replayEvent(m);
+      if (m.containsKey("id") && m["id"] >= es._biggestKnownEventId)
+        es._biggestKnownEventId = m["id"];
 
-        if (m.containsKey("timestamp")) {
-          replayProgress = (m["timestamp"] - startTime) / (endTime - startTime);
-        }
+      if (!skipplayback) await es.replayEvent(m);
+
+      if (m.containsKey("timestamp")) {
+        replayProgress = (m["timestamp"] - startTime) / (endTime - startTime);
       }
     }
 
     replayProgress = 1.0;
-    print("Events erfolgreich eingespielt.");
-    es._biggestKnownEventId = 1000000;
+    print("Successfully read events.");
 
     es._eventFileSink = new EventFileWriter(es.eventFile);
     es._eventFileMirrorSink = new EventFileWriter(es.eventFileMirror);
