@@ -119,6 +119,8 @@ class EventRouter {
       }
 
       await logTransaction.commit();
+
+      updateSubscriptions();
     } catch (e) {
       print("Log error: $e");
       await logTransaction.rollback();
@@ -225,6 +227,18 @@ class EventRouter {
 
   int getNewEventId() => ++_biggestKnownEventId;
 
+  Future updateSubscriptions() async {
+    final List<Future> updates = [];
+
+    for (WebSocketConnection conn in connections) {
+      for (Subscription sub in conn.subscriptions.values) {
+        updates.add(sub.update());
+      }
+    }
+
+    return Future.wait(updates);
+  }
+
   /**
    * Spielt ein Event neu ab. Die EventHandler werden alle *nacheinander* in *einer* Transaktion ausgeführt.
    * Wirft einer der [EventHandler] eine Exception, wird ein Rollback ausgeführt und eine Map mit {"error": "msg"}
@@ -263,12 +277,7 @@ class EventRouter {
       // Erst nach Speichern an den Client bestätigen!
       await Future.wait([_eventFileSink.add(e), _eventFileMirrorSink.add(e)]);
 
-      for (WebSocketConnection conn in connections) {
-        for (Subscription sub in conn.subscriptions.values) {
-          // Subscriptionupdate anstoßen, aber nicht warten
-          sub.update();
-        }
-      }
+      updateSubscriptions();
 
       return {"id": finalInput["id"]};
     } catch (e) {

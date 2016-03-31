@@ -36,7 +36,7 @@ class Subscription {
       _lastResponseChecksum = checksum;
 
       // Loggen
-      if (querydata["action"] != "eventsourcing_actions") {
+      if (!querydata["action"].startsWith("eventsourcing_actions")) {
         conn.router.logAction(
             eventid: 0,
             user: conn.user,
