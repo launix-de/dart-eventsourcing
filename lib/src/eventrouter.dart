@@ -26,6 +26,14 @@ class EventRouter {
   /// Ordner, in den die alte EventQueue bei Start gesichert wird
   final Directory backupDirectory;
 
+  final File eventFileMirror;
+
+  /// Eventfile sink
+  EventFileWriter _eventFileSink = null;
+
+  /// Eventfile mirror sink
+  EventFileWriter _eventFileMirrorSink = null;
+
   /// Bekannte [EventHandler], die bei Ausführung eines bestimmten Events ausgeführt werden sollen
   final Map<String, List<EventHandler>> eventHandler;
 
@@ -42,9 +50,6 @@ class EventRouter {
 
   /// Active web socket connections
   final List<WebSocketConnection> connections = [];
-
-  /// Eventfile sink
-  EventFileWriter _eventQueueSink = null;
 
   /// Additional handlers to be executed for each *new* incoming event (not replayed ones)
   final List<EventHandler> pushHooks = [];
@@ -66,14 +71,18 @@ class EventRouter {
 
   /// Saves the current EventQueue in [eventFile] in a new gzipped file in [backupDirectory] ("events_milliSecondsSinceEpoch.dat")
   Future backupEvents() async {
-    final File tempEventFile = new File(backupDirectory.path + "/tmp.dat");
+    // First save complete chain as "backup/TIMESTAMP.dat" (gzipped)
+    final File tempEventFile = new File("${backupDirectory.path}/tmp.dat");
     await tempEventFile.create(recursive: true);
     final Stream<List<int>> eventsFile = eventFile.openRead();
-    final IOSink tmpFile = tempEventFile.openWrite();
+    final IOSink tmpSink = tempEventFile.openWrite();
 
-    await eventsFile.transform(GZIP.encoder).pipe(tmpFile);
+    await eventsFile.transform(GZIP.encoder).pipe(tmpSink);
     await tempEventFile.rename(backupDirectory.path +
         "/events_${new DateTime.now().millisecondsSinceEpoch}.dat");
+
+    // Now save complete chain as "backup/events.dat" which will mirror "data/events.dat"
+    await eventFile.copy(eventFileMirror.path);
   }
 
   Future logAction(
@@ -252,7 +261,7 @@ class EventRouter {
       await trans.commit();
 
       // Erst nach Speichern an den Client bestätigen!
-      await _eventQueueSink.add(e);
+      await Future.wait([_eventFileSink.add(e), _eventFileMirrorSink.add(e)]);
 
       for (WebSocketConnection conn in connections) {
         for (Subscription sub in conn.subscriptions.values) {
@@ -275,6 +284,7 @@ class EventRouter {
       this.queryHandler,
       this.eventFile,
       this.backupDirectory,
+      this.eventFileMirror,
       this.authenticator,
       this.skipplayback);
 
@@ -283,8 +293,9 @@ class EventRouter {
    * [QueryHandler]n.
    * */
   static Future<EventRouter> create(httpHandlers, eventHandler, queryHandler,
-      {String eventFilePath: 'data/events.dat',
-      String backupPath: 'data/backup',
+      {String eventFilePath: '/data/events.dat',
+      String backupPath: '/backup',
+      String backupFilePath: '/backup/events.dat',
       String databaseSchemaPath: 'lib/schema.sql',
       Authenticator authenticator,
       bool skipplayback: false}) async {
@@ -295,6 +306,7 @@ class EventRouter {
         queryHandler,
         new File(eventFilePath),
         new Directory(backupPath),
+        new File(backupFilePath),
         authenticator,
         skipplayback);
 
@@ -397,7 +409,8 @@ class EventRouter {
     print("Events erfolgreich eingespielt.");
     es._biggestKnownEventId = 1000000;
 
-    es._eventQueueSink = new EventFileWriter(new File(eventFilePath));
+    es._eventFileSink = new EventFileWriter(es.eventFile);
+    es._eventFileMirrorSink = new EventFileWriter(es.eventFileMirror);
 
     return es;
   }
