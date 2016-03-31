@@ -28,22 +28,30 @@ Stream<Map<String, dynamic>> resultsToMap(Results r,
   }
 }
 
-Future resetDatabase(File schemaFile, ConnectionPool db) async {
+Future resetDatabase(File schemaFile, EventRouter router) async {
   assert(await schemaFile.exists());
+
+  router.db = new ConnectionPool(
+        host: 'mysql',
+        port: 3306,
+        user: 'event',
+        password: 'event',
+        db: 'event',
+        max: 50);
 
   final Iterable<String> sql = (await schemaFile.readAsString()).split(";");
 
   final Iterable<String> tables =
-      (await (await db.query("SHOW FULL TABLES WHERE TABLE_TYPE != 'VIEW'"))
+      (await (await router.db.query("SHOW FULL TABLES WHERE TABLE_TYPE != 'VIEW'"))
               .toList())
           .map((r) => r[0]);
 
   final Iterable<String> views =
-      (await (await db.query("SHOW FULL TABLES WHERE TABLE_TYPE LIKE 'VIEW'"))
+      (await (await router.db.query("SHOW FULL TABLES WHERE TABLE_TYPE LIKE 'VIEW'"))
               .toList())
           .map((r) => r[0]);
 
-  final Transaction trans = await db.startTransaction();
+  final Transaction trans = await router.db.startTransaction();
 
   if (tables.isNotEmpty)
     print("Lösche ${tables.length} Tabellen und spiele neues Schema ein...");
@@ -58,7 +66,7 @@ Future resetDatabase(File schemaFile, ConnectionPool db) async {
     }
 
     for (String s in sql) {
-      if (s.trim().isNotEmpty) await db.query(s.replaceAll("::", ";"));
+      if (s.trim().isNotEmpty) await router.db.query(s.replaceAll("::", ";"));
     }
 
     // Create meta tables
@@ -68,7 +76,7 @@ Future resetDatabase(File schemaFile, ConnectionPool db) async {
       `user` BIGINT(20) NOT NULL,
       `timestamp` BIGINT(20) NOT NULL,
       `parameters` TEXT NOT NULL,
-      `action` VARCHAR(30) NOT NULL,
+      `action` VARCHAR(50) NOT NULL,
       `type` VARCHAR(20) NOT NULL,
       `source` VARCHAR(10) NOT NULL,
       `result` TEXT NOT NULL,

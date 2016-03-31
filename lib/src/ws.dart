@@ -148,7 +148,7 @@ class WebSocketConnection {
           success: true,
           track: trackId);
     } catch (e) {
-      result = {"error": e, "track": trackId};
+      result = {"error": e.toString(), "track": trackId};
       encodedResult = JSON.encode(result);
 
       ws.add(encodedResult);

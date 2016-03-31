@@ -9,8 +9,10 @@ part of eventsourcing;
  *  [backupDirectory] gesichert. Zum Aufbau des Dateiformats siehe [readEventFile].
  *  */
 class EventRouter {
+  final bool skipplayback;
+
   /// Pool an SQL-Verbindungen (Standardmaximum 50)
-  final ConnectionPool db;
+  ConnectionPool db;
 
   /// EventQueue, in der die verarbeiteten Events gespeichert werden
   final File eventFile;
@@ -50,9 +52,11 @@ class EventRouter {
   final EventHandler logActionInsertQuery = prepareSQL(
       "INSERT INTO eventsourcing_actions(eventid, user, timestamp, parameters, action, type, source, result, track, success) VALUES(::eventid::, ::user::, ::timestamp::, ::parameters::, ::action::, ::type::, ::source::, ::result::, ::track::, ::success::)");
 
-  final QueryHandler logActionSelectQuery = prepareSQLDetailRenamed("SELECT count(*) FROM eventsourcing_actions", ["count"]);
+  final QueryHandler logActionSelectQuery = prepareSQLDetailRenamed(
+      "SELECT count(*) FROM eventsourcing_actions", ["count"]);
 
-  final EventHandler logActionRemoveQuery = prepareSQL("DELETE FROM eventsourcing_actions ORDER BY timestamp LIMIT 1");
+  final EventHandler logActionRemoveQuery = prepareSQL(
+      "DELETE FROM eventsourcing_actions ORDER BY timestamp LIMIT 1");
 
   /// Saves the current EventQueue in [eventFile] in a new gzipped file in [backupDirectory] ("events_milliSecondsSinceEpoch.dat")
   Future backupEvents() async {
@@ -95,7 +99,7 @@ class EventRouter {
         "track": track
       }, logTransaction);
 
-      if((await logActionSelectQuery({}, db))["count"] > 500){
+      if ((await logActionSelectQuery({}, db))["count"] > 500) {
         await logActionRemoveQuery({}, logTransaction);
       }
 
@@ -131,7 +135,7 @@ class EventRouter {
         try {
           await h(ep, trans);
         } catch (err) {
-          errors.add(err);
+          errors.add(err.toString());
 
           // Beim Abspielen der Events Fehler ignorieren
           print(
@@ -141,7 +145,7 @@ class EventRouter {
       await trans.commit();
 
       if (errors.isEmpty) {
-        logAction(
+        /* logAction(
             eventid: e.containsKey("id") ? e["id"] : 0,
             user: e.containsKey("user") ? e["user"] : 0,
             parameters: JSON.encode(e),
@@ -149,7 +153,7 @@ class EventRouter {
             type: "push",
             source: "replay",
             result: "",
-            success: true);
+            success: true); */
       } else {
         logAction(
             eventid: e.containsKey("id") ? e["id"] : 0,
@@ -162,7 +166,9 @@ class EventRouter {
             success: false);
       }
     } catch (e) {
-      await trans.rollback();
+      try {
+        await trans.rollback();
+      } catch (e) {}
       rethrow;
     } finally {
       _eventCount++;
@@ -263,14 +269,8 @@ class EventRouter {
       this.queryHandler,
       this.eventFile,
       this.backupDirectory,
-      this.authenticator)
-      : db = new ConnectionPool(
-            host: 'localhost',
-            port: 3306,
-            user: 'event',
-            password: 'event',
-            db: 'event',
-            max: 50) {}
+      this.authenticator,
+      this.skipplayback);
 
   /**
    * Erstellt einen neuen [EventRouter] mit den angegeben [EventHandler]n und
@@ -280,7 +280,8 @@ class EventRouter {
       {String eventFilePath: 'data/events.dat',
       String backupPath: 'data/backup',
       String databaseSchemaPath: 'lib/schema.sql',
-      Authenticator authenticator}) async {
+      Authenticator authenticator,
+      bool skipplayback: false}) async {
     // Instanz anlegen
     final EventRouter es = new EventRouter._EventRouter(
         httpHandlers,
@@ -288,7 +289,11 @@ class EventRouter {
         queryHandler,
         new File(eventFilePath),
         new Directory(backupPath),
-        authenticator);
+        authenticator,
+        skipplayback);
+
+    if (skipplayback)
+      print("WARNING: Skipping eventqueue and database initialization");
 
     // Backup
     Future backupFuture = es.backupEvents();
@@ -316,7 +321,7 @@ class EventRouter {
       final indexUri = new Uri.file(dir.path).resolve('index.html');
       staticFiles.serveFile(new File(indexUri.toFilePath()), request);
     };
-    final server = await HttpServer.bind(InternetAddress.ANY_IP_V4, 8338);
+    final server = await HttpServer.bind(InternetAddress.ANY_IP_V4, 8080);
     server.forEach((HttpRequest req) async {
       try {
         String path = req.uri.path;
@@ -361,22 +366,24 @@ class EventRouter {
     });
 
     // Datenbank zurücksetzen (falls noch was drin ist)
-    await resetDatabase(new File(databaseSchemaPath), es.db);
+    if (!skipplayback) await resetDatabase(new File(databaseSchemaPath), es);
     await backupFuture;
 
     int startTime = 0;
     int endTime = new DateTime.now().millisecondsSinceEpoch;
 
     // Alte Events einspielen
-    await for (Map m in readEventFile(new File(eventFilePath))) {
-      if (startTime == 0 && m.containsKey("timestamp")) {
-        startTime = m["timestamp"];
-      }
+    if (!skipplayback) {
+      await for (Map m in readEventFile(new File(eventFilePath))) {
+        if (startTime == 0 && m.containsKey("timestamp")) {
+          startTime = m["timestamp"];
+        }
 
-      await es.replayEvent(m);
+        await es.replayEvent(m);
 
-      if (m.containsKey("timestamp")) {
-        replayProgress = (m["timestamp"] - startTime) / (endTime - startTime);
+        if (m.containsKey("timestamp")) {
+          replayProgress = (m["timestamp"] - startTime) / (endTime - startTime);
+        }
       }
     }
 
