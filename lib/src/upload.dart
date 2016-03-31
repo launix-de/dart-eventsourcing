@@ -76,7 +76,7 @@ HttpHandler uploadHandler() {
             await router.submitEvent(uploadEvent, {"httprequest": req}, userId);
         if (response.containsKey("error")) throw response["error"];
 
-        await tmpFile.rename(Path.join("upload", "${fileId}.dat"));
+        await tmpFile.rename(Path.join("/upload", "${fileId}.dat"));
 
         req.response
           ..headers.contentType = ContentType.JSON
@@ -94,7 +94,7 @@ HttpHandler uploadHandler() {
       final String filename = req.uri.queryParameters["filename"];
       final bool inline = req.uri.queryParameters.containsKey("inline");
       final File requestedFile =
-          new File(Path.join("upload", "${requestedFileId}.dat"));
+          new File(Path.join("/upload", "${requestedFileId}.dat"));
 
       print(requestedFileId);
 
