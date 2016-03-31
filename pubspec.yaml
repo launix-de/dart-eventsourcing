@@ -1,10 +1,12 @@
 name: eventsourcing
 version: 0.1.0
 dependencies:
-    sqljocky: ^0.14.1
-    http_server: any
-    path: any
-    test: any
-    crc32: ^0.1.6
-    mime: ^0.9.3
-    uuid: ^0.5.0
+  sqljocky:
+    git: https://github.com/gwTumm/sqljocky.git
+  http_server: any
+  args: any
+  path: any
+  test: any
+  crc32: ^0.1.6
+  mime: ^0.9.3
+  uuid: ^0.5.0
