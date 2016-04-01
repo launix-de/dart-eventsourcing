@@ -12,13 +12,24 @@ class EventRouter {
   final bool skipplayback;
 
   /// Pool an SQL-Verbindungen (Standardmaximum 50)
-  final ConnectionPool db = new ConnectionPool(
-      host: 'mysql',
-      port: 3306,
-      user: 'event',
-      password: 'event',
-      db: 'event',
-      max: 50);
+  ConnectionPool db;
+
+  Future _connectDb() async {
+    try {
+      db = new ConnectionPool(
+          host: 'mysql',
+          port: 3306,
+          user: 'event',
+          password: 'event',
+          db: 'event',
+          max: 50);
+      await db.ping();
+    } finally {
+      try {
+        db.closeConnectionsNow();
+      } catch (e) {}
+    }
+  }
 
   /// EventQueue, in der die verarbeiteten Events gespeichert werden
   final File eventFile;
@@ -323,6 +334,9 @@ class EventRouter {
         authenticator,
         skipplayback);
 
+    await retry(es._connectDb,
+        interval: new Duration(seconds: 5), tryLimit: 20);
+
     if (skipplayback)
       print("WARNING: Skipping eventqueue and database initialization");
 
@@ -412,7 +426,11 @@ class EventRouter {
       if (m.containsKey("id") && m["id"] >= es._biggestKnownEventId)
         es._biggestKnownEventId = m["id"];
 
-      if (!skipplayback) await es.replayEvent(m);
+      try {
+        if (!skipplayback) await es.replayEvent(m);
+      } catch (e) {
+        print("Failed to play back event: $e");
+      }
 
       if (m.containsKey("timestamp")) {
         replayProgress = (m["timestamp"] - startTime) / (endTime - startTime);

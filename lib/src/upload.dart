@@ -97,8 +97,6 @@ HttpHandler uploadHandler() {
       final File requestedFile =
           new File(Path.join("/upload", "${requestedFileId}.dat"));
 
-      print(requestedFileId);
-
       if (!await requestedFile.exists()) {
         req.response.statusCode = HttpStatus.NOT_FOUND;
         await req.response.close();
