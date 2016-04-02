@@ -33,3 +33,4 @@ part 'src/authenticate.dart';
 part 'src/subscription.dart';
 part 'src/upload.dart';
 part 'src/chat.dart';
+part 'src/csvextractor.dart';
