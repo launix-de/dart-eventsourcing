@@ -77,8 +77,8 @@ class LatexPrinter {
       resp
         ..statusCode = HttpStatus.OK
         ..headers.contentType = ContentType.parse("application/pdf")
-        ..headers
-            .set("Content-Disposition", "attachment; filename=${filename}");
+        ..headers.set("Content-Disposition",
+            "attachment; filename=${Uri.encodeComponent(filename)}");
 
       await latexPdfFile.openRead().pipe(resp);
 
