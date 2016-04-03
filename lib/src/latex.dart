@@ -108,9 +108,7 @@ class LatexPrinter {
           action: templateName,
           result: combinedErrorOutput);
     } finally {
-      try {
-        await latexTempDir.delete(recursive: true);
-      } catch (e) {}
+      await latexTempDir.delete(recursive: true);
     }
   }
 }
