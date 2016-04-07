@@ -37,13 +37,13 @@ class EventRouter {
   /// Ordner, in den die alte EventQueue bei Start gesichert wird
   final Directory backupDirectory;
 
-  final File eventFileMirror;
+  final File backupFile;
 
   /// Eventfile sink
   EventFileWriter _eventFileSink = null;
 
   /// Eventfile mirror sink
-  EventFileWriter _eventFileMirrorSink = null;
+  EventBackupFileWriter _eventFileBackup = null;
 
   /// Bekannte [EventHandler], die bei Ausführung eines bestimmten Events ausgeführt werden sollen
   final Map<String, List<EventHandler>> eventHandler;
@@ -80,20 +80,16 @@ class EventRouter {
   final EventHandler logActionRemoveQuery = prepareSQL(
       "DELETE FROM eventsourcing_actions ORDER BY timestamp LIMIT 1");
 
-  /// Saves the current EventQueue in [eventFile] in a new gzipped file in [backupDirectory] ("events_milliSecondsSinceEpoch.dat")
-  Future backupEvents() async {
-    // First save complete chain as "backup/TIMESTAMP.dat" (gzipped)
-    final File tempEventFile = new File("${backupDirectory.path}/tmp.dat");
-    await tempEventFile.create(recursive: true);
-    final Stream<List<int>> eventsFile = eventFile.openRead();
-    final IOSink tmpSink = tempEventFile.openWrite();
+  /// Inbitializes /backup/events.dat
+  Future initializeBackup() async {
+    final File backupFile =
+        new File(Path.join(backupDirectory.path, "events.dat"));
+    final bool fileExists = await backupFile.exists();
 
-    await eventsFile.transform(GZIP.encoder).pipe(tmpSink);
-    await tempEventFile.rename(backupDirectory.path +
-        "/events_${new DateTime.now().millisecondsSinceEpoch}.dat");
-
-    // Now save complete chain as "backup/events.dat" which will mirror "data/events.dat"
-    await eventFile.copy(eventFileMirror.path);
+    if (!fileExists) {
+      await backupFile.create();
+      print("Created backup file ${backupFile.path}");
+    }
   }
 
   Future logAction(
@@ -290,7 +286,8 @@ class EventRouter {
       await trans.commit();
 
       // Erst nach Speichern an den Client bestätigen!
-      await Future.wait([_eventFileSink.add(e), _eventFileMirrorSink.add(e)]);
+      await _eventFileSink.add(e);
+      _eventFileBackup.update();
 
       updateSubscriptions();
 
@@ -308,7 +305,7 @@ class EventRouter {
       this.queryHandler,
       this.eventFile,
       this.backupDirectory,
-      this.eventFileMirror,
+      this.backupFile,
       this.authenticator,
       this.skipplayback);
 
@@ -341,7 +338,7 @@ class EventRouter {
       print("WARNING: Skipping eventqueue and database initialization");
 
     // Backup
-    Future backupFuture = es.backupEvents();
+    Future backupFuture = es.initializeBackup();
 
     // Webserver aktivieren
     //  final frontendHandler =
@@ -441,7 +438,8 @@ class EventRouter {
     print("Successfully read events.");
 
     es._eventFileSink = new EventFileWriter(es.eventFile);
-    es._eventFileMirrorSink = new EventFileWriter(es.eventFileMirror);
+    es._eventFileBackup =
+        new EventBackupFileWriter(es.eventFile, es.backupFile);
 
     return es;
   }

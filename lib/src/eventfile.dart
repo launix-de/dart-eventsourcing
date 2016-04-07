@@ -63,3 +63,91 @@ class EventFileWriter {
     await _file.close();
   }
 }
+
+class EventBackupFileWriter {
+  final File eventFile;
+  final File backupFile;
+
+  RandomAccessFile _eventFileReader;
+  RandomAccessFile _backupFileWriter;
+  EventBackupFileWriter(this.eventFile, this.backupFile);
+
+  bool _updateRunning = false;
+  bool _updateRequested = false;
+
+  Future onFailure(e) async {
+    print("[!] Backup handling error $e; retrying...");
+
+    await close();
+    await new Future.delayed(const Duration(seconds: 1));
+
+    return initialize();
+  }
+
+  Future initialize() async {
+    _updateRunning = false;
+    _updateRequested = false;
+
+    try {
+      _eventFileReader = await eventFile.open();
+      _backupFileWriter = await backupFile.open(mode: FileMode.APPEND);
+    } catch (e) {
+      return onFailure(e);
+    }
+
+    await update();
+  }
+
+  Future update() async {
+    if (!_updateRunning) {
+      _updateRunning = true;
+      try {
+        await _update();
+      } catch (e) {
+        return onFailure(e);
+      } finally {
+        _updateRunning = false;
+      }
+      if (_updateRequested) {
+        _updateRequested = false;
+        return update();
+      }
+    } else {
+      _updateRequested = true;
+    }
+  }
+
+  Future _update() async {
+    const MAX_CHUNK_SIZE = 4096;
+
+    final int evlen = await eventFile.length();
+    final int blen = await backupFile.length();
+
+    int pos = blen;
+    int writtenCount = 0;
+    while (pos < evlen) {
+      await _eventFileReader.setPosition(pos);
+      final int newDataCount =
+          evlen - pos > MAX_CHUNK_SIZE ? MAX_CHUNK_SIZE : evlen - pos;
+      final List<int> newData = await _eventFileReader.read(newDataCount);
+      await _backupFileWriter.writeFrom(newData);
+      pos += newDataCount;
+      writtenCount += newDataCount;
+    }
+
+    print("Backup updated with ${writtenCount} bytes");
+  }
+
+  Future close() async {
+    try {
+      await _eventFileReader.close();
+    } catch (e) {
+      print("Failed to close event file reader");
+    }
+    try {
+      await _backupFileWriter.close();
+    } catch (e) {
+      print("Failed to close backup file writer");
+    }
+  }
+}
