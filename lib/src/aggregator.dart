@@ -12,8 +12,8 @@ QueryHandler aggregate(String arrayName, String primaryKey,
       final Map item = itemsInt.containsKey(key)
           ? itemsInt[key]
           : {subArrayPrefix: [], primaryKey: key};
-      final List<Map> subItems = item[subArrayPrefix];
-      final Map newSubItem = {};
+      final List<dynamic> subItems = item[subArrayPrefix];
+      var newSubItem = {};
 
       for (String key in originalItem.keys) {
         if (!key.startsWith(subArrayPrefix) && key != primaryKey) {
@@ -21,7 +21,12 @@ QueryHandler aggregate(String arrayName, String primaryKey,
           item[key] = originalItem[key];
         } else if (key != primaryKey) {
           // In Unterliste hinzufügen
-          newSubItem[key.substring(subArrayPrefix.length)] = originalItem[key];
+          final String subKey = key.substring(subArrayPrefix.length);
+
+          if (subKey.isNotEmpty)
+            newSubItem[subKey] = originalItem[key];
+          else
+            newSubItem = originalItem[key];
         }
       }
 
