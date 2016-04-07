@@ -95,6 +95,13 @@ class EventBackupFileWriter {
       return onFailure(e);
     }
 
+    final bool fileExists = await backupFile.exists();
+
+    if (!fileExists) {
+      await backupFile.create();
+      print("Created backup file ${backupFile.path}");
+    }
+
     await update();
   }
 

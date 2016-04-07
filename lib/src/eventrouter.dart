@@ -80,18 +80,6 @@ class EventRouter {
   final EventHandler logActionRemoveQuery = prepareSQL(
       "DELETE FROM eventsourcing_actions ORDER BY timestamp LIMIT 1");
 
-  /// Inbitializes /backup/events.dat
-  Future initializeBackup() async {
-    final File backupFile =
-        new File(Path.join(backupDirectory.path, "events.dat"));
-    final bool fileExists = await backupFile.exists();
-
-    if (!fileExists) {
-      await backupFile.create();
-      print("Created backup file ${backupFile.path}");
-    }
-  }
-
   Future logAction(
       {int eventid: 0,
       int user: 0,
@@ -337,9 +325,6 @@ class EventRouter {
     if (skipplayback)
       print("WARNING: Skipping eventqueue and database initialization");
 
-    // Backup
-    Future backupFuture = es.initializeBackup();
-
     // Webserver aktivieren
     //  final frontendHandler =
     //      shelfstatic.createStaticHandler('html', defaultDocument: 'index.html');
@@ -409,7 +394,7 @@ class EventRouter {
 
     // Datenbank zurücksetzen (falls noch was drin ist)
     if (!skipplayback) await resetDatabase(new File(databaseSchemaPath), es);
-    await backupFuture;
+    ;
 
     int startTime = 0;
     int endTime = new DateTime.now().millisecondsSinceEpoch;
@@ -440,6 +425,7 @@ class EventRouter {
     es._eventFileSink = new EventFileWriter(es.eventFile);
     es._eventFileBackup =
         new EventBackupFileWriter(es.eventFile, es.backupFile);
+    await es._eventFileBackup.initialize();
 
     return es;
   }
