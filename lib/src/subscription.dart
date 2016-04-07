@@ -53,13 +53,10 @@ class Subscription {
   /// Löst die Subscription
   void remove() {
     conn.subscriptions.remove(trackId);
-    print("${conn.username} entfernt Subscription auf ${querydata['action']}");
   }
 
   /// Erstellt eine neue Subscription und schickt die erste Antwort
   Subscription(this.conn, this.querydata, this.trackId) {
-    print(
-        "Neue Subscription von ${conn.username}: ${querydata['action']}, TrackId $trackId");
     update();
   }
 }
