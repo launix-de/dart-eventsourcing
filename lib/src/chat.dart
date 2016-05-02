@@ -1,28 +1,48 @@
 part of eventsourcing;
 
+/// Limit of chat messages per conversation. This amount of messages is kept
+/// in memory, older messages are freed.
 const CHAT_MESSAGES_PER_CONVERSATION = 30;
 
+/// Stores information about a user participating in a conversation
 class ChatUserInformation {
+  /// The user's id
   final int id;
+
+  /// The user's name
   final String name;
 
   ChatUserInformation(this.id, this.name);
 
+  /// Returns the json representation of this user
   Map toJson() {
     return {"id": id, "name": name};
   }
 }
 
+/// At the moment, chat messages can only be standard text messages (UTF8 strings),
+/// or they contain a single base64 encoded image
 enum ChatMessageType { TEXT, IMAGE }
 
+/// Represents a chat message sent to a chat conversation by a participan
+/// of the conversation
 class ChatMessage {
+  /// Time the message was sent by the client
   final int timestamp;
+
+  /// Type of the message (Image / text)
   final ChatMessageType type;
+
+  /// Message content (either raw text or base64 encoded image data)
   final String message;
+
+  /// User who sent this message
   final ChatUserInformation user;
 
+  /// Initializes a new ChatMessage
   ChatMessage(this.timestamp, this.type, this.message, this.user);
 
+  /// JSON representation of a chat message
   Map toJson() {
     return {
       "timestamp": timestamp,
@@ -33,13 +53,27 @@ class ChatMessage {
   }
 }
 
+/// A chat session is an open chat conversation, kept in memory. It is freed
+/// as soon as every participant has left. Participants who are offline
+/// can request all messages as soon as they go online.
 class ChatSession {
+  /// Name of this conversation, can be set by every participant
   String name;
+
+  /// Unique id identifying this conversation
   final String id = new Uuid().v4();
+
+  /// Users currently participating in the conversation. User id is stored as key,
+  /// user name stored as value.
   final Map<int, String> participants;
+
+  /// Backlog of the messages sent to this conversation
   final List<ChatMessage> messages = []; // LIFO
+
+  /// Router on whose connections this conversatoin has been created
   final EventRouter router;
 
+  /// JSON representation of a conversation
   Map toJson() {
     final Map<String, String> participantsString = {};
     participants.forEach((k, v) => participantsString[k.toString()] = v);
@@ -52,12 +86,15 @@ class ChatSession {
     };
   }
 
+  /// Creates a new chat conversation. Notifies all participants.
   ChatSession(this.name, this.participants, this.router) {
     if (name == null) name = "Konversation";
 
     updateAll();
   }
 
+  /// Retrieves a new message, sent via [origin]. The message is relayed
+  /// to all online participants.
   void addMessage(
       WebSocketConnection origin, String text, ChatMessageType typ) {
     final ChatMessage msg = new ChatMessage(
@@ -82,6 +119,9 @@ class ChatSession {
         .forEach((c) => c.ws.add(notificationJSON));
   }
 
+  /// Notifies all participants that they are still part of this conversation
+  /// and sends them the message backlog stored in [messages], as well as a
+  /// list of all [participants].
   void updateAll() {
     final Map notification = toJson();
     notification["type"] = "chat";
@@ -94,12 +134,22 @@ class ChatSession {
   }
 }
 
+/// ChatProvider implements a ws protocol addon to be added
+/// to a router. Chat messages are identified by type "chat".
+/// The ChatProvider also keeps track of the online status of users;
+/// A user can be online (connected via WebSocket), in background mode
+/// (activated via action "backgroundActivate"), or offline.
 class ChatProvider implements Provider<WebSocketConnection> {
+  /// Conversations currently active
   final Map<String, ChatSession> conversations = {};
+
+  /// Router this provider is tied to
   final EventRouter router;
 
+  /// Creates a new ChatProvider tied to the given EventRouter
   ChatProvider(this.router);
 
+  /// Sends a list of known users and their online status to all online clients
   void updateOnline() {
     final List<Map> activeUsers = router.connections
         .map((c) =>
@@ -116,7 +166,9 @@ class ChatProvider implements Provider<WebSocketConnection> {
     router.connections.forEach((c) => c.ws.add(sessionInfoJSON));
   }
 
-  void updateSession(WebSocketConnection conn) {
+  /// Sends a list with all conversations the specified user is participating in, including
+  /// the backlog and participants of every conversation.
+  void updateClient(WebSocketConnection conn) {
     final Map<String, Map> conversationJsons = {};
 
     conversations.values
@@ -133,15 +185,22 @@ class ChatProvider implements Provider<WebSocketConnection> {
     conn.ws.add(JSON.encode(response));
   }
 
+  /// Called when a WS client disconnects. Sends a list with the currently
+  /// online users to all clients.
   Future onDisconnect(WebSocketConnection conn) async {
     updateOnline();
   }
 
+  /// Called when a WS client connects. Sends a list with the currently
+  /// online users to all clients, and sends all conversation information
+  /// to the new client.
   Future onConnect(WebSocketConnection conn) async {
-    updateSession(conn);
+    updateClient(conn);
     updateOnline();
   }
 
+  /// Called when a WS client sends a ws message with typ "chat" (new chat
+  /// message or status update).
   Future<Map<String, dynamic>> onMessage(
       WebSocketConnection conn, Map request) async {
     if (request.containsKey("type") && request["type"] == "chat") {
@@ -153,7 +212,7 @@ class ChatProvider implements Provider<WebSocketConnection> {
         "track": trackId
       };
 
-      switch (request["action"]) {
+      switch (request["action"])
         case "backgroundActivate":
           if (conn.state == WebSocketState.OK)
             conn.state = WebSocketState.BACKGROUND;
