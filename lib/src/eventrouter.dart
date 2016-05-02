@@ -57,7 +57,7 @@ class EventRouter {
   int _eventCount = 0;
 
   /// Authenticator used to check user credentials
-  final Authenticator authenticator;
+  final Authoriser authenticator;
 
   /// Active web socket connections
   final List<WebSocketConnection> connections = [];
@@ -306,7 +306,7 @@ class EventRouter {
       String backupPath: '/backup',
       String backupFilePath: '/backup/events.dat',
       String databaseSchemaPath: 'lib/schema.sql',
-      Authenticator authenticator,
+      Authoriser authenticator,
       bool skipplayback: false}) async {
     // Instanz anlegen
     final EventRouter es = new EventRouter._EventRouter(

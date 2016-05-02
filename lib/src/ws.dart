@@ -11,7 +11,7 @@ enum WebSocketState { UNAUTHENTICATED, OK, BACKGROUND, CLOSED }
  * Nach dem Format `{"action": "...", "track": xxx}`
  * Nach Verbindungsaufbau zum Server ist eine Verbindung zunächst nicht authentifiziert.
  * Das erste Paket vom Client muss ein "username"- und "password"-Feld enthalten,
- * woraufhin der Server die Logindaten mit einem [Authenticator] prüft. Daraufhin
+ * woraufhin der Server die Logindaten mit einem [Authoriser] prüft. Daraufhin
  * wird die Verbindung als aufgebaut betrachtet bzw. terminiert.
  * Anschließend können Anfragen (`{"action": "get", "track": xxx}`) und Kommandos (`{"action": "push", "track": xxx}`)
  * gestellt werden, wobei eine `track`-Nummer mitgesendet werden muss. Diese schickt
