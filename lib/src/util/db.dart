@@ -1,9 +1,10 @@
 part of eventsourcing;
 
 /**
- * Konvertiert ein [Results]-Objekt der [sqljocky]-Bibliothek (Stream von SQL-Ergebniszeilen)
- * in einen Stream von Maps.
- * */
+ * Converts a [Results] object to a stream of maps, each representing a sql row.
+ * A sql row is returned as a map (indexed by field name).
+ * [wantedNames] can be used to rename the map keys.
+ */
 Stream<Map<String, dynamic>> resultsToMap(Results r,
     [Iterable<String> wantedNames = null]) async* {
   List<String> fields;
@@ -28,6 +29,13 @@ Stream<Map<String, dynamic>> resultsToMap(Results r,
   }
 }
 
+/// Resets the database opened by [router]. All tables and views are deleted,
+/// then [schemaFile] is executed which is expected to contain sql commands
+/// that recreate the database structure.
+/// Additionally, the table "eventsourcing_actions" and the view
+/// "eventsourcing_actionsliste" are created. These are used as a log for
+/// events executed by the system.
+/// The whole reset is wrapped in a transaction.
 Future resetDatabase(File schemaFile, EventRouter router) async {
   assert(await schemaFile.exists());
 
