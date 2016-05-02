@@ -29,7 +29,7 @@ part 'src/validator.dart';
 part 'src/sql.dart';
 part 'src/sqlfilter.dart';
 part 'src/ws.dart';
-part 'src/authenticate.dart';
+part 'src/authoriser.dart';
 part 'src/subscription.dart';
 part 'src/upload.dart';
 part 'src/chat.dart';
