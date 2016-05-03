@@ -212,7 +212,7 @@ class ChatProvider implements Provider<WebSocketConnection> {
         "track": trackId
       };
 
-      switch (request["action"])
+      switch (request["action"]) {
         case "backgroundActivate":
           if (conn.state == WebSocketState.OK)
             conn.state = WebSocketState.BACKGROUND;
