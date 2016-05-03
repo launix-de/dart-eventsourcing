@@ -139,7 +139,7 @@ class ChatSession {
 /// The ChatProvider also keeps track of the online status of users;
 /// A user can be online (connected via WebSocket), in background mode
 /// (activated via action "backgroundActivate"), or offline.
-class ChatProvider implements Provider<WebSocketConnection> {
+class ChatProvider implements WebSocketHandler {
   /// Conversations currently active
   final Map<String, ChatSession> conversations = {};
 

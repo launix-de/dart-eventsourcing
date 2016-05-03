@@ -69,7 +69,7 @@ class EventRouter {
   final Map<String, HttpHandler> httpHandler;
 
   /// Handlers that handle incoming websocket requests
-  final List<Provider<WebSocketConnection>> webSocketProviders = [];
+  final List<WebSocketHandler> webSocketProviders = [];
 
   final EventHandler logActionInsertQuery = prepareSQL(
       "INSERT INTO eventsourcing_actions(eventid, user, timestamp, parameters, action, type, source, result, track, success) VALUES(::eventid::, ::user::, ::timestamp::, ::parameters::, ::action::, ::type::, ::source::, ::result::, ::track::, ::success::)");
