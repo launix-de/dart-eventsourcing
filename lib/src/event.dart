@@ -25,19 +25,31 @@ typedef Future HttpHandler(EventRouter router, HttpRequest request);
 /// by the absolute path specified by the map key.
 typedef Map<String, List<HttpHandler>> HttpHandlerProvider();
 
+/// A WebSocketHandler can be hooked to an [EventRouter]. The router will then
+/// call the defined methods for each [WebSocketConnection].
 abstract class WebSocketHandler {
+  /// Called when new client connects
   Future onConnect(WebSocketConnection conn);
+
+  /// Called after a client disconnects
   Future onDisconnect(WebSocketConnection conn);
+
+  /// Called when the client sends a json message [request]. null should be returned
+  /// if this handler does not want to deal with the request ("type" attribute should
+  /// be checked). Otherwise, the returned data is encoded as json and sent
+  /// to the client.
   Future<Map<String, dynamic>> onMessage(WebSocketConnection conn, Map request);
 }
 
-/// Stellt benannte Queries zur Verfügung
+/// Provides queries identified by an action (simple string, should be camel cased).
+/// The results are merged. On failure, an exception is thrown.
 typedef Map<String, List<QueryHandler>> QueryProvider();
 
-/// Stellt benannte Events zur Verfügung
+/// Provides events identified by an action (simple string, should be camel cased).
+/// On failure, an exception is thrown.
 typedef Map<String, List<EventHandler>> EventProvider();
 
-/// Kombiniert die Events aus mehreren [EventProvider]n in einer Map
+/// Merges multiple [EventProvider]s
 Map<String, List<EventHandler>> combineEventProviders(
     List<EventProvider> providers) {
   final Map<String, List<EventHandler>> combined = {};
@@ -49,7 +61,7 @@ Map<String, List<EventHandler>> combineEventProviders(
   return combined;
 }
 
-/// Kombiniert die Events aus mehreren [QueryProvider]n in einer Map
+/// Combines multiple [QueryProvider]s
 Map<String, List<QueryHandler>> combineQueryProviders(
     List<QueryProvider> providers) {
   final Map<String, List<QueryHandler>> combined = {};
@@ -61,10 +73,11 @@ Map<String, List<QueryHandler>> combineQueryProviders(
   return combined;
 }
 
-/// EventHandler, der nichts tut
+/// EventHandler that returns the empty map in the next eventqueue cycle
 Future<Map> emptyHandler(Map e, Transaction trans) => new Future.value({});
 
-/// EventHandler, der einen "Deprecated"-Fehler wirft. **Achtung**: Einmal verwendete
-/// Events dürfen nie entfernt werden, da sie ja bei jedem Start neu eingelesen werden.
+/// EventHandler that throws a "deprecated" exception
+/// **Note**: Handlers for events that were already executed should never be removed
+/// since they have to be rerun on every start.
 Future<Map> deprecatedHandler(Map e, Transaction trans) async =>
     throw "Deprecated: Event is no longer supported.";
