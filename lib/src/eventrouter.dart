@@ -274,7 +274,9 @@ class EventRouter {
       await trans.commit();
 
       // Erst nach Speichern an den Client bestätigen!
-      await _eventFileSink.add(e);
+      final Map logged = new Map.from(e);
+      if (logged.containsKey("type")) logged.remove("type");
+      await _eventFileSink.add(logged);
       _eventFileBackup.update();
 
       updateSubscriptions();
