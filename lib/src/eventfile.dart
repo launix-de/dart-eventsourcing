@@ -19,7 +19,11 @@ Stream<Map> readEventFile(File eventFile) async* {
       tlist[1] = list[1];
 
       final int len = bytes.getUint16(0);
-      assert(len > 0);
+
+      if (len == 0) {
+        list = list.sublist(2);
+        continue;
+      }
 
       // Check whether the event has already been read
       if (list.length < 2 + len) break;
@@ -58,7 +62,8 @@ class EventFileWriter {
     final List<int> eventstring = UTF8.encode(JSON.encode(m));
 
     bytes.setUint16(0, eventstring.length);
-    _file..add(tlist)..add(eventstring);
+    eventstring.insertAll(0, tlist);
+    _file..add(eventstring);
 
     await _file.flush();
   }
