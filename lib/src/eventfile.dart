@@ -60,10 +60,12 @@ class EventFileWriter {
     final ByteData bytes = new ByteData.view(tlist.buffer);
 
     final List<int> eventstring = UTF8.encode(JSON.encode(m));
+    final List<int> towrite = new List();
 
     bytes.setUint16(0, eventstring.length);
-    eventstring.insertAll(0, tlist);
-    _file..add(eventstring);
+    towrite.addAll(tlist);
+    towrite.addAll(eventstring);
+    _file.add(towrite);
 
     await _file.flush();
   }

@@ -281,7 +281,9 @@ class EventRouter {
 
       return {"id": finalInput["id"]};
     } catch (e) {
-      await trans.rollback();
+      try {
+        await trans.rollback();
+      } catch (e) {}
       print("Eventerror: $e");
       return {"error": e.toString()};
     }
