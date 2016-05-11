@@ -129,7 +129,7 @@ HttpHandler latexHandler(LatexHttpMethod method) {
         final String value = pair[1];
 
         if (key == "data") {
-          request = JSON.decode(Uri.decodeFull(value));
+          request = JSON.decode(Uri.decodeQueryComponent(value));
         }
       }
     } else {
