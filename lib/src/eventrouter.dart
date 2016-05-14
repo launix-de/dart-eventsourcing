@@ -14,14 +14,16 @@ class EventRouter {
   /// Pool an SQL-Verbindungen (Standardmaximum 50)
   ConnectionPool db;
 
+  final String dbhost, dbuser, dbpassword, dbname;
+
   Future _connectDb() async {
     try {
       db = new ConnectionPool(
-          host: 'mysql',
+          host: dbhost,
           port: 3306,
-          user: 'event',
-          password: 'event',
-          db: 'event',
+          user: dbuser,
+          password: dbpassword,
+          db: dbname,
           max: 50);
       await db.ping();
     } finally {
@@ -299,19 +301,27 @@ class EventRouter {
       this.backupDirectory,
       this.backupFile,
       this.authenticator,
-      this.skipplayback);
+      this.skipplayback,
+      this.dbhost,
+      this.dbuser,
+      this.dbpassword,
+      this.dbname);
 
   /**
    * Erstellt einen neuen [EventRouter] mit den angegeben [EventHandler]n und
    * [QueryHandler]n.
    * */
   static Future<EventRouter> create(httpHandlers, eventHandler, queryHandler,
-      {String eventFilePath: '/data/events.dat',
-      String backupPath: '/backup',
-      String backupFilePath: '/backup/events.dat',
+      {String eventFilePath,
+      String backupPath,
+      String backupFilePath,
       String databaseSchemaPath: 'lib/schema.sql',
       Authoriser authenticator,
-      bool skipplayback: false}) async {
+      bool skipplayback: false,
+      String dbHost,
+      String dbUser,
+      String dbPassword,
+      String dbName}) async {
     // Instanz anlegen
     final EventRouter es = new EventRouter._EventRouter(
         httpHandlers,
@@ -321,7 +331,11 @@ class EventRouter {
         new Directory(backupPath),
         new File(backupFilePath),
         authenticator,
-        skipplayback);
+        skipplayback,
+        dbHost,
+        dbUser,
+        dbPassword,
+        dbName);
 
     await retry(es._connectDb,
         interval: new Duration(seconds: 5), tryLimit: 20);
