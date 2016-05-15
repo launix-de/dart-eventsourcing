@@ -2,6 +2,19 @@ part of eventsourcing;
 
 const int MAX_UPLOAD_FILE_SIZE = 1000 * 1000 * 50; // 50 MB
 
+EventHandler uploadRemovalHandler(String uploadPath) {
+  return (Map event, Transaction tx) async {
+    final int fileId = event["file"];
+    final File file = new File(Path.join(uploadPath, "${fileId}.dat"));
+
+    if (await file.exists()) {
+      await file.delete();
+    } else {
+      throw "File does not exist";
+    }
+  };
+}
+
 HttpHandler uploadHandler() {
   return (EventRouter router, final HttpRequest req) async {
     final String requestedFilename = req.uri.pathSegments[1];
@@ -76,7 +89,8 @@ HttpHandler uploadHandler() {
             await router.submitEvent(uploadEvent, {"httprequest": req}, userId);
         if (response.containsKey("error")) throw response["error"];
 
-        await tmpFile.copy(Path.join("/upload", "${fileId}.dat"));
+        await tmpFile
+            .copy(Path.join(router.uploadDirectory.path, "${fileId}.dat"));
         tmpFile.delete();
 
         req.response
@@ -94,8 +108,8 @@ HttpHandler uploadHandler() {
       final int requestedFileId = int.parse(requestedFilename);
       final String filename = req.uri.queryParameters["filename"];
       final bool inline = req.uri.queryParameters.containsKey("inline");
-      final File requestedFile =
-          new File(Path.join("/upload", "${requestedFileId}.dat"));
+      final File requestedFile = new File(
+          Path.join(router.uploadDirectory.path, "${requestedFileId}.dat"));
 
       if (!await requestedFile.exists()) {
         req.response.statusCode = HttpStatus.NOT_FOUND;

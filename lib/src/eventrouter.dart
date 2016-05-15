@@ -39,6 +39,8 @@ class EventRouter {
   /// Ordner, in den die alte EventQueue bei Start gesichert wird
   final Directory backupDirectory;
 
+  final Directory uploadDirectory;
+
   final File backupFile;
 
   /// Eventfile sink
@@ -305,7 +307,8 @@ class EventRouter {
       this.dbhost,
       this.dbuser,
       this.dbpassword,
-      this.dbname);
+      this.dbname,
+      this.uploadDirectory);
 
   /**
    * Erstellt einen neuen [EventRouter] mit den angegeben [EventHandler]n und
@@ -321,7 +324,8 @@ class EventRouter {
       String dbHost,
       String dbUser,
       String dbPassword,
-      String dbName}) async {
+      String dbName,
+      String uploadPath}) async {
     // Instanz anlegen
     final EventRouter es = new EventRouter._EventRouter(
         httpHandlers,
@@ -335,7 +339,8 @@ class EventRouter {
         dbHost,
         dbUser,
         dbPassword,
-        dbName);
+        dbName,
+        new Directory(uploadPath));
 
     await retry(es._connectDb,
         interval: new Duration(seconds: 5), tryLimit: 20);
