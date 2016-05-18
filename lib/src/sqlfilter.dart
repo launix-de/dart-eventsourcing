@@ -215,7 +215,7 @@ QueryHandler filterQuery(String viewName) {
       data["list"] = valuesWanted;
     }
 
-    final int offset = data.containsKey("offset") ? data["offset"] : 0;
+    final int offset = input.containsKey("offset") ? input["offset"] : 0;
     query += " LIMIT 20 OFFSET $offset";
 
     final int rowCount = (await prepareSQLDetail(countQuery)({}, db))["count"];
