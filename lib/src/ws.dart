@@ -147,13 +147,13 @@ class WebSocketConnection {
           result: encodedResult,
           success: true,
           track: trackId);
-    } catch (e) {
+    } catch (e, str) {
       result = {"error": e.toString(), "track": trackId};
       encodedResult = JSON.encode(result);
 
       ws.add(encodedResult);
 
-      print("WS-Fehler bei $username: $e.");
+      print("WS-Fehler bei $username: $e, $str");
 
       // Aktion als Fehler loggen
       router.logAction(
@@ -182,9 +182,12 @@ class WebSocketConnection {
   /// Initialisiert eine neue WebSocket-Verbindung mit einem bereits geöffneten
   /// WebSocket.
   WebSocketConnection(this.ws, this.router, this.info) {
-    ws.listen((dat) {
-      onData(dat);
-    }, onDone: onClose);
+    () async {
+      await for(String data in ws){
+        await onData(data);
+      }
+      onClose();
+    }();
     router.connections.add(this);
     print("Neue WS-Verbindung zu ${info.remoteAddress.host}!");
 
